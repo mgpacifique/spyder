@@ -40,7 +40,7 @@ The question sits at the intersection of two topics:
 
 ## Week 2 — Frequency Distributions
 
-Full write-up: [`blog.html`](blog.html)  
+Full write-up: [`index.html`](index.html)  
 Python code: [`mars.py`](mars.py) · [`marscrater.ipynb`](marscrater.ipynb)
 
 ### Key findings
@@ -77,7 +77,7 @@ File: `marscrater_pds.csv` — 384,343 rows × 19 columns (16 MB).
 
 ```
 spyder/
-├── blog.html               ← Week 2 blog post (styled, with FA icons)
+├── index.html               ← Week 2 blog post (styled, with FA icons)
 ├── mars.py                 ← Initial Python exploration script
 ├── marscrater.ipynb        ← Full analysis notebook
 ├── marscrater_pds.csv      ← Robbins crater database (raw data)
