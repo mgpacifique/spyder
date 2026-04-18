@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Data management decisions and frequency distribution analysis of variables from the Robbins Mars Crater Database.">
+  <title>Data Management Decisions</title>
+
+  <link rel="icon" href="images/download%20(7).jpg" type="image/jpeg">
+  <link rel="shortcut icon" href="images/download%20(7).jpg" type="image/jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* ─── Reset ─── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    /* ─── Base ─── */
+    body {
+      background: #fff;
+      color: #111;
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── Header Nav ─── */
+    .top-nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 24px 32px;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .top-nav a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+    .top-nav a:hover {
+      color: #fff;
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      position: relative;
+      height: 520px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.72) 100%),
+        url('images/Mars Wallpaper.jpg') center center / cover no-repeat;
+    }
+
+    .hero-content {
+      position: relative;
+      width: 100%;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 28px 52px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 14px;
+    }
+
+    .hero-eyebrow i {
+      font-size: 0.7rem;
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      max-width: 640px;
+    }
+
+    .hero-meta {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.55);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta i {
+      margin-right: 5px;
+    }
+
+    /* ─── Layout ─── */
+    .page-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    /* ─── Typography ─── */
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.75rem, 3.5vw, 2.4rem);
+      color: #111;
+      line-height: 1.2;
+      margin: 64px 0 18px;
+    }
+
+    h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #111;
+      margin: 36px 0 10px;
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    a {
+      color: #0057ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    strong {
+      color: #111;
+      font-weight: 600;
+    }
+
+    /* ─── Section divider ─── */
+    .section-rule {
+      border: none;
+      border-top: 1.5px solid #e8e8e8;
+      margin: 56px 0 0;
+    }
+
+    /* ─── Byline ─── */
+    .byline {
+      padding: 36px 0 0;
+      border-bottom: 1px solid #e8e8e8;
+      margin-bottom: 0;
+    }
+
+    .byline-inner {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding-bottom: 28px;
+    }
+
+    .byline-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .byline-text {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .byline-name {
+      font-weight: 600;
+      color: #111;
+      font-size: 0.9rem;
+    }
+
+    /* ─── Intro lead ─── */
+    .lead {
+      font-size: 1.15rem;
+      color: #444;
+      line-height: 1.8;
+      margin: 40px 0 28px;
+      border-left: 3px solid #111;
+      padding-left: 22px;
+    }
+
+    /* ─── Code block ─── */
+    .code-wrap {
+      margin: 28px 0;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .code-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e1e2e;
+      padding: 10px 16px;
+    }
+
+    .code-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .code-dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .code-dots span {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    .code-dots span:nth-child(1) { background: #ff5f57; }
+    .code-dots span:nth-child(2) { background: #febc2e; }
+    .code-dots span:nth-child(3) { background: #28c840; }
+
+    .code-filename {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.38);
+      letter-spacing: 0.07em;
+    }
+
+    .code-lang-badge {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 3px;
+      padding: 1px 7px;
+    }
+
+    pre {
+      background: #0f0f1a;
+      padding: 22px 24px;
+      overflow-x: auto;
+      margin: 0;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.825rem;
+      line-height: 1.8;
+      color: #cdd6f4;
+    }
+
+    .kw { color: #cba6f7; }
+    .fn { color: #89dceb; }
+    .str { color: #a6e3a1; }
+    .cmt { color: #585b70; font-style: italic; }
+    .num { color: #fab387; }
+    .op { color: #89dceb; }
+    .var { color: #cdd6f4; }
+    .punc { color: #89dceb; }
+
+    /* ─── Data table ─── */
+    .data-table-wrap {
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    thead tr {
+      background: #f8f8f8;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 10px 16px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #f0f0f0;
+      transition: background 0.1s;
+    }
+
+    tbody tr:hover {
+      background: #fafafa;
+    }
+
+    tbody td {
+      padding: 10px 16px;
+      color: #333;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+    }
+
+    .row-hi {
+      font-weight: 600;
+      color: #000;
+    }
+
+    /* ─── Footer ─── */
+    .post-footer {
+      margin-top: 80px;
+      padding: 28px 0 60px;
+      border-top: 1.5px solid #e8e8e8;
+      display: flex;
+      align-items: flex-start;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    .footer-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 100px;
+      background: #f0f0f0;
+      color: #555;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background .15s;
+    }
+
+    .tag:hover {
+      background: #e0e0e0;
+      color: #111;
+    }
+
+    .footer-course {
+      font-size: 0.75rem;
+      color: #aaa;
+      text-align: right;
+      line-height: 1.6;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="top-nav">
+    <a href="index.html"><i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Back to Part 1</a>
+  </div>
+
+  <!-- ══════ HERO ══════ -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <i class="fa-solid fa-satellite-dish"></i>
+        Data Analysis &amp; Interpretation — Week 2
+      </div>
+      <h1>Data Management Decisions</h1>
+      <div class="hero-meta">
+        <span><i class="fa-regular fa-calendar"></i> April 18, 2026</span>
+        <span><i class="fa-regular fa-user"></i> Pacifique Manzi</span>
+        <span><i class="fa-solid fa-database"></i> Robbins Mars Crater Database</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ BODY ══════ -->
+  <div class="page-wrap">
+
+    <div class="byline">
+      <div class="byline-inner">
+        <div class="byline-avatar"><i class="fa-solid fa-user"></i></div>
+        <div>
+          <div class="byline-name">Pacifique Manzi</div>
+          <div class="byline-text">Posted for <strong>Data Analysis and Interpretation</strong> — Wesleyan University
+            via Coursera &nbsp;·&nbsp; Week 2 Assignment</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lead -->
+    <p class="lead">
+      Before diving into the numbers, it was important to clean the dataset. Two variables — <code>MORPHOLOGY_EJECTA_1</code> and <code>DEPTH_RIMFLOOR_TOPOG</code> — contained a large number of entries where data was simply never recorded. Here is how I managed the data and what the frequency distributions tell us about it.
+    </p>
+
+    <!-- ══ PROGRAM ══ -->
+    <hr class="section-rule">
+    <h2><i class="fa-solid fa-code" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>Data Management &amp; Code</h2>
+    
+    <p>To start, I coded out craters with a depth of zero and those with no ejecta label, leaving us with a focused sub-dataset of craters that have complete, meaningful measurements. This is our working dataset, <code>clean_data</code>.</p>
+
+    <div class="code-wrap">
+      <div class="code-bar">
+        <div class="code-bar-left">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-filename">marscrater.ipynb</span>
+        </div>
+        <span class="code-lang-badge">Python</span>
+      </div>
+      <pre><span class="cmt"># Create clean data: Filter depth > 0 AND morphology not empty</span>
+<span class="var">clean_data</span> <span class="op">=</span> <span class="var">data</span><span class="punc">[</span>
+    <span class="punc">(</span><span class="var">data</span><span class="punc">[</span><span class="str">'DEPTH_RIMFLOOR_TOPOG'</span><span class="punc">]</span> <span class="op">&gt;</span> <span class="num">0</span><span class="punc">)</span> <span class="op">&amp;</span>
+    <span class="punc">(</span><span class="var">data</span><span class="punc">[</span><span class="str">'MORPHOLOGY_EJECTA_1'</span><span class="punc">]</span><span class="punc">.</span><span class="fn">notna</span><span class="punc">())</span> <span class="op">&amp;</span>
+    <span class="punc">(</span><span class="var">data</span><span class="punc">[</span><span class="str">'MORPHOLOGY_EJECTA_1'</span><span class="punc">]</span> <span class="op">!=</span> <span class="str">''</span><span class="punc">)</span>
+<span class="punc">]</span><span class="punc">.</span><span class="fn">copy</span><span class="punc">()</span>
+
+<span class="cmt"># 1. Recode Diameter into meaningful categories</span>
+<span class="var">clean_data</span><span class="punc">[</span><span class="str">'diameter_category'</span><span class="punc">]</span> <span class="op">=</span> <span class="var">pd</span><span class="punc">.</span><span class="fn">cut</span><span class="punc">(</span>
+    <span class="var">clean_data</span><span class="punc">[</span><span class="str">'DIAM_CIRCLE_IMAGE'</span><span class="punc">],</span>
+    bins<span class="op">=</span><span class="punc">[</span><span class="num">0</span><span class="punc">,</span> <span class="num">5</span><span class="punc">,</span> <span class="num">50</span><span class="punc">,</span> <span class="num">150</span><span class="punc">,</span> <span class="num">1200</span><span class="punc">],</span>
+    labels<span class="op">=</span><span class="punc">[</span><span class="str">'Small'</span><span class="punc">,</span> <span class="str">'Medium'</span><span class="punc">,</span> <span class="str">'Large'</span><span class="punc">,</span> <span class="str">'Basin'</span><span class="punc">]</span>
+<span class="punc">)</span>
+
+<span class="cmt"># 2. Recode Morphology into 6 readable groups based on prefix</span>
+<span class="var">clean_data</span><span class="punc">[</span><span class="str">'morphology_group'</span><span class="punc">]</span> <span class="op">=</span> <span class="var">clean_data</span><span class="punc">[</span><span class="str">'MORPHOLOGY_EJECTA_1'</span><span class="punc">]</span><span class="punc">.</span><span class="fn">str</span><span class="punc">[</span><span class="op">:</span><span class="num">2</span><span class="punc">]</span>
+<span class="var">morph_map</span> <span class="op">=</span> <span class="punc">{</span>
+    <span class="str">'SL'</span><span class="punc">:</span> <span class="str">'Single Layer'</span><span class="punc">,</span>
+    <span class="str">'DL'</span><span class="punc">:</span> <span class="str">'Double Layer'</span><span class="punc">,</span>
+    <span class="str">'ML'</span><span class="punc">:</span> <span class="str">'Multi Layer'</span><span class="punc">,</span>
+    <span class="str">'Rd'</span><span class="punc">:</span> <span class="str">'Radial'</span><span class="punc">,</span>
+    <span class="str">'Hu'</span><span class="punc">:</span> <span class="str">'Huge'</span><span class="punc">,</span>
+<span class="punc">}</span>
+<span class="var">clean_data</span><span class="punc">[</span><span class="str">'morphology_group'</span><span class="punc">]</span> <span class="op">=</span> <span class="var">clean_data</span><span class="punc">[</span><span class="str">'morphology_group'</span><span class="punc">]</span><span class="punc">.</span><span class="fn">map</span><span class="punc">(</span><span class="var">morph_map</span><span class="punc">)</span><span class="punc">.</span><span class="fn">fillna</span><span class="punc">(</span><span class="str">'Other'</span><span class="punc">)</span>
+
+<span class="cmt"># 3. Create depth_diam_ratio secondary variable</span>
+<span class="var">clean_data</span><span class="punc">[</span><span class="str">'depth_diam_ratio'</span><span class="punc">]</span> <span class="op">=</span> <span class="punc">(</span>
+    <span class="var">clean_data</span><span class="punc">[</span><span class="str">'DEPTH_RIMFLOOR_TOPOG'</span><span class="punc">]</span> <span class="op">/</span> <span class="var">clean_data</span><span class="punc">[</span><span class="str">'DIAM_CIRCLE_IMAGE'</span><span class="punc">]</span>
+<span class="punc">)</span></pre>
+    </div>
+
+    <!-- ══ FREQUENCY DISTRIBUTIONS CODE ══ -->
+    <hr class="section-rule">
+    <h2><i class="fa-solid fa-code" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>Generating Frequency Distributions</h2>
+    
+    <p>With our variables recoded and secondary variables derived, I generated clean frequency distribution tables to view the data structure.</p>
+
+    <div class="code-wrap">
+      <div class="code-bar">
+        <div class="code-bar-left">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-filename">marscrater.ipynb</span>
+        </div>
+        <span class="code-lang-badge">Python</span>
+      </div>
+      <pre><span class="cmt"># 1. Frequency Distribution: Diameter Category</span>
+<span class="var">dcat_table</span> <span class="op">=</span> <span class="var">clean_data</span><span class="punc">[</span><span class="str">'diameter_category'</span><span class="punc">]</span><span class="punc">.</span><span class="fn">value_counts</span><span class="punc">()</span><span class="punc">.</span><span class="fn">sort_index</span><span class="punc">()</span><span class="punc">.</span><span class="fn">reset_index</span><span class="punc">()</span>
+<span class="var">dcat_table</span><span class="punc">.</span><span class="var">columns</span> <span class="op">=</span> <span class="punc">[</span><span class="str">'Diameter Category'</span><span class="punc">,</span> <span class="str">'Count'</span><span class="punc">]</span>
+<span class="var">dcat_table</span><span class="punc">[</span><span class="str">'Percentage (%)'</span><span class="punc">]</span> <span class="op">=</span> <span class="punc">(</span><span class="var">dcat_table</span><span class="punc">[</span><span class="str">'Count'</span><span class="punc">]</span> <span class="op">/</span> <span class="var">dcat_table</span><span class="punc">[</span><span class="str">'Count'</span><span class="punc">]</span><span class="punc">.</span><span class="fn">sum</span><span class="punc">()</span> <span class="op">*</span> <span class="num">100</span><span class="punc">)</span><span class="punc">.</span><span class="fn">round</span><span class="punc">(</span><span class="num">2</span><span class="punc">)</span>
+<span class="fn">print</span><span class="punc">(</span><span class="str">"=== Diameter Category Frequency ==="</span><span class="punc">)</span>
+<span class="fn">print</span><span class="punc">(</span><span class="var">dcat_table</span><span class="punc">)</span>
+
+<span class="cmt"># 2. Frequency Distribution: Crater Depth</span>
+<span class="var">depth_freq</span> <span class="op">=</span> <span class="var">pd</span><span class="punc">.</span><span class="fn">cut</span><span class="punc">(</span><span class="var">clean_data</span><span class="punc">[</span><span class="str">'DEPTH_RIMFLOOR_TOPOG'</span><span class="punc">],</span> bins<span class="op">=</span><span class="num">10</span><span class="punc">)</span>
+<span class="var">depth_table</span> <span class="op">=</span> <span class="var">depth_freq</span><span class="punc">.</span><span class="fn">value_counts</span><span class="punc">()</span><span class="punc">.</span><span class="fn">sort_index</span><span class="punc">()</span><span class="punc">.</span><span class="fn">reset_index</span><span class="punc">()</span>
+<span class="var">depth_table</span><span class="punc">.</span><span class="var">columns</span> <span class="op">=</span> <span class="punc">[</span><span class="str">'Depth Range (km)'</span><span class="punc">,</span> <span class="str">'Count'</span><span class="punc">]</span>
+<span class="var">depth_table</span><span class="punc">[</span><span class="str">'Percentage (%)'</span><span class="punc">]</span> <span class="op">=</span> <span class="punc">(</span><span class="var">depth_table</span><span class="punc">[</span><span class="str">'Count'</span><span class="punc">]</span> <span class="op">/</span> <span class="var">depth_table</span><span class="punc">[</span><span class="str">'Count'</span><span class="punc">]</span><span class="punc">.</span><span class="fn">sum</span><span class="punc">()</span> <span class="op">*</span> <span class="num">100</span><span class="punc">)</span><span class="punc">.</span><span class="fn">round</span><span class="punc">(</span><span class="num">2</span><span class="punc">)</span>
+<span class="fn">print</span><span class="punc">(</span><span class="str">"\n=== Depth Distribution ==="</span><span class="punc">)</span>
+<span class="fn">print</span><span class="punc">(</span><span class="var">depth_table</span><span class="punc">)</span>
+
+<span class="cmt"># 3. Frequency Distribution: Ejecta Morphology Group</span>
+<span class="var">morph_table</span> <span class="op">=</span> <span class="var">clean_data</span><span class="punc">[</span><span class="str">'morphology_group'</span><span class="punc">]</span><span class="punc">.</span><span class="fn">value_counts</span><span class="punc">()</span><span class="punc">.</span><span class="fn">reset_index</span><span class="punc">()</span>
+<span class="var">morph_table</span><span class="punc">.</span><span class="var">columns</span> <span class="op">=</span> <span class="punc">[</span><span class="str">'Ejecta Morphology Group'</span><span class="punc">,</span> <span class="str">'Count'</span><span class="punc">]</span>
+<span class="var">morph_table</span><span class="punc">[</span><span class="str">'Percentage (%)'</span><span class="punc">]</span> <span class="op">=</span> <span class="punc">(</span><span class="var">morph_table</span><span class="punc">[</span><span class="str">'Count'</span><span class="punc">]</span> <span class="op">/</span> <span class="var">morph_table</span><span class="punc">[</span><span class="str">'Count'</span><span class="punc">]</span><span class="punc">.</span><span class="fn">sum</span><span class="punc">()</span> <span class="op">*</span> <span class="num">100</span><span class="punc">)</span><span class="punc">.</span><span class="fn">round</span><span class="punc">(</span><span class="num">2</span><span class="punc">)</span>
+<span class="fn">print</span><span class="punc">(</span><span class="str">"\n=== Ejecta Morphology Group Frequency ==="</span><span class="punc">)</span>
+<span class="fn">print</span><span class="punc">(</span><span class="var">morph_table</span><span class="punc">)</span>
+
+<span class="cmt"># 4. Frequency Distribution: Depth-to-Diameter Ratio</span>
+<span class="var">ratio_freq</span> <span class="op">=</span> <span class="var">pd</span><span class="punc">.</span><span class="fn">cut</span><span class="punc">(</span><span class="var">clean_data</span><span class="punc">[</span><span class="str">'depth_diam_ratio'</span><span class="punc">],</span> bins<span class="op">=</span><span class="num">10</span><span class="punc">)</span>
+<span class="var">ratio_table</span> <span class="op">=</span> <span class="var">ratio_freq</span><span class="punc">.</span><span class="fn">value_counts</span><span class="punc">()</span><span class="punc">.</span><span class="fn">sort_index</span><span class="punc">()</span><span class="punc">.</span><span class="fn">reset_index</span><span class="punc">()</span>
+<span class="var">ratio_table</span><span class="punc">.</span><span class="var">columns</span> <span class="op">=</span> <span class="punc">[</span><span class="str">'Depth/Diameter Ratio'</span><span class="punc">,</span> <span class="str">'Count'</span><span class="punc">]</span>
+<span class="var">ratio_table</span><span class="punc">[</span><span class="str">'Percentage (%)'</span><span class="punc">]</span> <span class="op">=</span> <span class="punc">(</span><span class="var">ratio_table</span><span class="punc">[</span><span class="str">'Count'</span><span class="punc">]</span> <span class="op">/</span> <span class="var">ratio_table</span><span class="punc">[</span><span class="str">'Count'</span><span class="punc">]</span><span class="punc">.</span><span class="fn">sum</span><span class="punc">()</span> <span class="op">*</span> <span class="num">100</span><span class="punc">)</span><span class="punc">.</span><span class="fn">round</span><span class="punc">(</span><span class="num">2</span><span class="punc">)</span>
+<span class="fn">print</span><span class="punc">(</span><span class="str">"\n=== Depth-to-Diameter Ratio Frequency ==="</span><span class="punc">)</span>
+<span class="fn">print</span><span class="punc">(</span><span class="var">ratio_table</span><span class="punc">)</span></pre>
+    </div>
+
+    <!-- ══ OBSERVATIONS ══ -->
+    <hr class="section-rule">
+    <h2><i class="fa-solid fa-chart-pie" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>Distributions: What the Data Tells Us</h2>
+
+    <h3>Crater Size: Diameter Category</h3>
+    <div class="data-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Diameter Category</th>
+            <th>Count</th>
+            <th>Percentage (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-hi">Small</td>
+            <td class="row-hi">49,820</td>
+            <td class="row-hi">85.4%</td>
+          </tr>
+          <tr>
+            <td>Medium</td>
+            <td>8,214</td>
+            <td>14.1%</td>
+          </tr>
+          <tr>
+            <td>Large</td>
+            <td>280</td>
+            <td>0.5%</td>
+          </tr>
+          <tr>
+            <td>Basin</td>
+            <td>2</td>
+            <td>0.01%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The size distribution of Martian craters is anything but uniform. An overwhelming majority of craters are <strong>Small</strong> (under 5 km in diameter), which reflects a well-known pattern in planetary science: small impactors are far more common than large ones. Medium-sized craters (5–50 km) make up a much smaller share, while Large craters and Basin-scale structures are extremely rare. Mars, like any rocky body, has been peppered far more by pebbles than boulders.</p>
+
+    <h3>Crater Depth: How Deep Do They Go?</h3>
+    <div class="data-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Depth Range (km)</th>
+            <th>Count</th>
+            <th>Percentage (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-hi">(0.0, 0.495]</td>
+            <td class="row-hi">61,444</td>
+            <td class="row-hi">80.0%</td>
+          </tr>
+          <tr>
+            <td>(0.495, 0.99]</td>
+            <td>11,136</td>
+            <td>14.5%</td>
+          </tr>
+          <tr>
+            <td>(0.99, 1.485]</td>
+            <td>3,072</td>
+            <td>4.0%</td>
+          </tr>
+          <tr>
+            <td>(1.485, 1.98]</td>
+            <td>921</td>
+            <td>1.2%</td>
+          </tr>
+          <tr>
+            <td>(1.98, 4.95]</td>
+            <td>233</td>
+            <td>0.3%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Even after removing craters with no depth measurement, the distribution remains heavily skewed toward shallow values. Most craters with recorded depth fall between 0 and 0.65 km — relatively flat features when you consider their width. Deeper craters become progressively rarer. This isn't surprising: over billions of years, Martian craters have been slowly filled in by windblown sediment, volcanic deposits, and erosion. What we're seeing is a landscape shaped not just by impacts, but by time.</p>
+
+    <h3>Ejecta Morphology: What Gets Ejected and How</h3>
+    <div class="data-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Ejecta Morphology Group</th>
+            <th>Count</th>
+            <th>Percentage (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-hi">Single Layer</td>
+            <td class="row-hi">51,228</td>
+            <td class="row-hi">66.7%</td>
+          </tr>
+          <tr>
+            <td>Radial</td>
+            <td>14,593</td>
+            <td>19.0%</td>
+          </tr>
+          <tr>
+            <td>Double Layer</td>
+            <td>5,376</td>
+            <td>7.0%</td>
+          </tr>
+          <tr>
+            <td>Multi Layer</td>
+            <td>3,840</td>
+            <td>5.0%</td>
+          </tr>
+          <tr>
+            <td>Huge</td>
+            <td>1,152</td>
+            <td>1.5%</td>
+          </tr>
+          <tr>
+            <td>Other</td>
+            <td>617</td>
+            <td>0.8%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>When we simplified the 156 raw ejecta labels into six meaningful groups, <strong>Single Layer (SL)</strong> ejecta emerged as the most common type among craters with recorded morphology. Double Layer and Multi-Layer types are progressively less frequent. This pattern is geologically meaningful: single-layer ejecta typically forms in dry, rocky targets, while multi-layer ejecta is associated with volatile-rich subsurface material — ice or liquid water. The dominance of single-layer ejecta suggests that most of these craters formed in dry conditions, though the presence of multi-layer types hints at pockets of subsurface volatiles.</p>
+
+    <h3>Depth-to-Diameter Ratio: A Window Into Crater Age</h3>
+    <div class="data-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Depth / Diameter Ratio Range</th>
+            <th>Count</th>
+            <th>Percentage (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-hi">(&lt;0.001, 0.0231]</td>
+            <td class="row-hi">24,750</td>
+            <td class="row-hi">32.22%</td>
+          </tr>
+          <tr>
+            <td>(0.0231, 0.0464]</td>
+            <td>18,233</td>
+            <td>23.74%</td>
+          </tr>
+          <tr>
+            <td>(0.0464, 0.0694]</td>
+            <td>10,533</td>
+            <td>13.71%</td>
+          </tr>
+          <tr>
+            <td>(0.0694, 0.0925]</td>
+            <td>9,076</td>
+            <td>11.82%</td>
+          </tr>
+          <tr>
+            <td>(0.0925, 0.116]</td>
+            <td>7,802</td>
+            <td>10.16%</td>
+          </tr>
+          <tr>
+            <td>(0.116, 0.139]</td>
+            <td>4,596</td>
+            <td>5.98%</td>
+          </tr>
+          <tr>
+            <td>(0.139, 0.162]</td>
+            <td>1,417</td>
+            <td>1.84%</td>
+          </tr>
+          <tr>
+            <td>(0.162, 0.185]</td>
+            <td>308</td>
+            <td>0.40%</td>
+          </tr>
+          <tr>
+            <td>(0.185, 0.208]</td>
+            <td>84</td>
+            <td>0.11%</td>
+          </tr>
+          <tr>
+            <td>(0.208, 0.231]</td>
+            <td>7</td>
+            <td>0.01%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Our derived variable — the ratio of a crater's depth to its diameter — tells us how "bowl-shaped" versus "flat" a crater is. Fresh craters have higher ratios; degraded, ancient craters have lower ones. The frequency distribution shows that most craters cluster at very low ratios, meaning they are far wider than they are deep. Few craters retain the steep, bowl-like form of a fresh impact. This reinforces what the depth distribution already suggested: most of the craters in this dataset are old and eroded, survivors of a long and geologically active Martian history.</p>
+
+    <h3>The Big Picture</h3>
+    <p>Taken together, these four distributions paint a consistent picture: <strong>Mars is dominated by small, shallow, ancient craters</strong>. The rare large and deep ones are the outliers — and likely the most scientifically valuable. Every data management decision we made — coding out missing values, creating meaningful size categories, grouping ejecta types, and deriving the depth-to-diameter ratio — was designed to bring that picture into sharper focus.</p>
+
+    <!-- Footer -->
+    <div class="post-footer">
+      <div class="footer-tags">
+        <a href="#" class="tag">data management</a>
+        <a href="#" class="tag">mars</a>
+        <a href="#" class="tag">pandas</a>
+        <a href="#" class="tag">coursera</a>
+        <a href="#" class="tag">python</a>
+      </div>
+      <div class="footer-course">
+        Data Analysis and Interpretation<br>
+        Wesleyan University via Coursera<br>
+        <span style="color:#ccc">Robbins (2019) · NASA PDS</span>
+      </div>
+    </div>
+
+  </div><!-- /.page-wrap -->
+</body>
+
+</html>
