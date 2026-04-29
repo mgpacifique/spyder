@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Hypothesis testing and ANOVA results for the Robbins Mars Crater Database.">
+  <title>ANOVA & Hypothesis Testing</title>
+
+  <link rel="icon" href="images/download%20(7).jpg" type="image/jpeg">
+  <link rel="shortcut icon" href="images/download%20(7).jpg" type="image/jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* ─── Reset ─── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    /* ─── Base ─── */
+    body {
+      background: #fff;
+      color: #111;
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── Header Nav ─── */
+    .top-nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 24px 32px;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .top-nav a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+    .top-nav a:hover {
+      color: #fff;
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      position: relative;
+      height: 520px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.72) 100%),
+        url('images/Mars Wallpaper.jpg') center center / cover no-repeat;
+    }
+
+    .hero-content {
+      position: relative;
+      width: 100%;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 28px 52px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 14px;
+    }
+
+    .hero-eyebrow i {
+      font-size: 0.7rem;
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      max-width: 640px;
+    }
+
+    .hero-meta {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.55);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta i {
+      margin-right: 5px;
+    }
+
+    /* ─── Layout ─── */
+    .page-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    /* ─── Typography ─── */
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.75rem, 3.5vw, 2.4rem);
+      color: #111;
+      line-height: 1.2;
+      margin: 64px 0 18px;
+    }
+
+    h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #111;
+      margin: 36px 0 10px;
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    a {
+      color: #0057ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    strong {
+      color: #111;
+      font-weight: 600;
+    }
+
+    /* ─── Section divider ─── */
+    .section-rule {
+      border: none;
+      border-top: 1.5px solid #e8e8e8;
+      margin: 56px 0 0;
+    }
+
+    /* ─── Byline ─── */
+    .byline {
+      padding: 36px 0 0;
+      border-bottom: 1px solid #e8e8e8;
+      margin-bottom: 0;
+    }
+
+    .byline-inner {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding-bottom: 28px;
+    }
+
+    .byline-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .byline-text {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .byline-name {
+      font-weight: 600;
+      color: #111;
+      font-size: 0.9rem;
+    }
+
+    /* ─── Intro lead ─── */
+    .lead {
+      font-size: 1.15rem;
+      color: #444;
+      line-height: 1.8;
+      margin: 40px 0 28px;
+      border-left: 3px solid #111;
+      padding-left: 22px;
+    }
+
+    /* ─── Callout ─── */
+    .callout {
+      border-left: 3px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 16px 20px;
+      margin: 28px 0;
+      font-size: 0.9rem;
+      line-height: 1.65;
+      background: #f5f8ff;
+      border-color: #0057ff;
+      color: #2a3f6f;
+    }
+    
+    .callout p {
+      margin: 0;
+    }
+
+    /* ─── Code block ─── */
+    .code-wrap {
+      margin: 28px 0;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .code-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e1e2e;
+      padding: 10px 16px;
+    }
+
+    .code-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .code-dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .code-dots span {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    .code-dots span:nth-child(1) { background: #ff5f57; }
+    .code-dots span:nth-child(2) { background: #febc2e; }
+    .code-dots span:nth-child(3) { background: #28c840; }
+
+    .code-filename {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.38);
+      letter-spacing: 0.07em;
+    }
+
+    .code-lang-badge {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 3px;
+      padding: 1px 7px;
+    }
+
+    pre {
+      background: #0f0f1a;
+      padding: 22px 24px;
+      overflow-x: auto;
+      margin: 0;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.825rem;
+      line-height: 1.8;
+      color: #cdd6f4;
+    }
+
+    .kw { color: #cba6f7; }
+    .fn { color: #89dceb; }
+    .str { color: #a6e3a1; }
+    .cmt { color: #585b70; font-style: italic; }
+    .num { color: #fab387; }
+    .op { color: #89dceb; }
+    .var { color: #cdd6f4; }
+    .punc { color: #89dceb; }
+
+    /* ─── Data table ─── */
+    .data-table-wrap {
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 20px 0;
+      font-family: 'Fira Code', monospace;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    thead tr {
+      background: #f8f8f8;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 10px 16px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #f0f0f0;
+      transition: background 0.1s;
+    }
+
+    tbody tr:hover {
+      background: #fafafa;
+    }
+
+    tbody td {
+      padding: 10px 16px;
+      color: #333;
+      font-size: 0.8rem;
+    }
+
+    .row-hi {
+      font-weight: 600;
+      color: #000;
+    }
+
+    /* ─── Footer ─── */
+    .post-footer {
+      margin-top: 80px;
+      padding: 28px 0 60px;
+      border-top: 1.5px solid #e8e8e8;
+      display: flex;
+      align-items: flex-start;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    .footer-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 100px;
+      background: #f0f0f0;
+      color: #555;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background .15s;
+    }
+
+    .tag:hover {
+      background: #e0e0e0;
+      color: #111;
+    }
+
+    .footer-course {
+      font-size: 0.75rem;
+      color: #aaa;
+      text-align: right;
+      line-height: 1.6;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="top-nav">
+    <a href="visualization.html"><i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Back to Part 3</a>
+  </div>
+
+  <!-- ══════ HERO ══════ -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <i class="fa-solid fa-satellite-dish"></i>
+        Data Analysis &amp; Interpretation — Week 3
+      </div>
+      <h1>ANOVA & Hypothesis Testing</h1>
+      <div class="hero-meta">
+        <span><i class="fa-regular fa-calendar"></i> April 29, 2026</span>
+        <span><i class="fa-regular fa-user"></i> Pacifique Manzi</span>
+        <span><i class="fa-solid fa-database"></i> Robbins Mars Crater Database</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ BODY ══════ -->
+  <div class="page-wrap">
+
+    <div class="byline">
+      <div class="byline-inner">
+        <div class="byline-avatar"><i class="fa-solid fa-user"></i></div>
+        <div>
+          <div class="byline-name">Pacifique Manzi</div>
+          <div class="byline-text">Posted for <strong>Data Analysis and Interpretation</strong> — Wesleyan University
+            via Coursera &nbsp;·&nbsp; Week 3 Assignment</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lead -->
+    <p class="lead">
+      Now that we have managed our variables of interest and visualized their relationships graphically, we are ready to test those relationships statistically. The first step is an Analysis of Variance (ANOVA), which assesses whether the means of a quantitative response variable are statistically different across the categories of an explanatory variable.
+    </p>
+
+    <!-- ══ ANOVA CODE ══ -->
+    <hr class="section-rule">
+    <h2><i class="fa-solid fa-code" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>Running the ANOVA</h2>
+    
+    <p>To test my theories regarding Martian crater morphology, I used the quantitative variable <code>DEPTH_RIMFLOOR_TOPOG</code> (Crater Depth) and the categorical variable <code>diameter_category</code> (Crater Size Category: Small, Medium, Large, Basin). Our null hypothesis is that there is no difference in the mean depth across size categories, while the alternative hypothesis is that there is a significant difference.</p>
+
+    <div class="code-wrap">
+      <div class="code-bar">
+        <div class="code-bar-left">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-filename">marscrater.ipynb</span>
+        </div>
+        <span class="code-lang-badge">Python</span>
+      </div>
+      <pre><span class="kw">import</span> <span class="cls">statsmodels.formula.api</span> <span class="kw">as</span> <span class="var">smf</span>
+<span class="kw">import</span> <span class="cls">statsmodels.stats.multicomp</span> <span class="kw">as</span> <span class="var">multi</span>
+
+<span class="cmt"># Subset data for ANOVA, dropping missing values</span>
+<span class="var">sub1</span> <span class="op">=</span> <span class="var">clean_data</span><span class="punc">[[</span><span class="str">'DEPTH_RIMFLOOR_TOPOG'</span><span class="punc">,</span> <span class="str">'diameter_category'</span><span class="punc">]]</span><span class="punc">.</span><span class="fn">dropna</span><span class="punc">()</span>
+
+<span class="cmt"># Using ols function for calculating the F-statistic and associated p-value</span>
+<span class="var">model1</span> <span class="op">=</span> <span class="var">smf</span><span class="punc">.</span><span class="fn">ols</span><span class="punc">(</span>formula<span class="op">=</span><span class="str">'DEPTH_RIMFLOOR_TOPOG ~ C(diameter_category)'</span><span class="punc">,</span> data<span class="op">=</span><span class="var">sub1</span><span class="punc">)</span>
+<span class="var">results1</span> <span class="op">=</span> <span class="var">model1</span><span class="punc">.</span><span class="fn">fit</span><span class="punc">()</span>
+<span class="fn">print</span><span class="punc">(</span><span class="var">results1</span><span class="punc">.</span><span class="fn">summary</span><span class="punc">())</span></pre>
+    </div>
+
+    <!-- ══ OUTPUT & INTERPRETATION ══ -->
+    <hr class="section-rule">
+    <h2><i class="fa-solid fa-chart-pie" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>ANOVA Results</h2>
+
+    <p>Running the OLS regression model on our sample of 76,804 valid craters yielded the following primary statistical results:</p>
+
+    <div class="data-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Statistic</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-hi">F-statistic</td>
+            <td class="row-hi">7035.0</td>
+          </tr>
+          <tr>
+            <td class="row-hi">Prob (F-statistic)</td>
+            <td class="row-hi">0.00</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Because the <strong>Prob (F-statistic)</strong> is 0.00 (which is less than the standard 0.05 threshold), our ANOVA is statistically significant. We can confidently reject the null hypothesis and state that there is a statistically significant difference in the mean crater depth across the different size categories.</p>
+
+
+    <!-- ══ POST HOC CODE ══ -->
+    <hr class="section-rule">
+    <h2><i class="fa-solid fa-code" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>Post Hoc Comparisons</h2>
+    
+    <p>Because our categorical explanatory variable has more than two levels, a significant ANOVA only tells us that <em>at least one</em> category mean is different, but it doesn't specify which ones. To find out, we must run a post hoc test using Tukey's HSD (Honestly Significant Difference).</p>
+
+    <div class="code-wrap">
+      <div class="code-bar">
+        <div class="code-bar-left">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-filename">marscrater.ipynb</span>
+        </div>
+        <span class="code-lang-badge">Python</span>
+      </div>
+      <pre><span class="cmt"># Run Tukey's HSD to evaluate all pairwise comparisons</span>
+<span class="var">mc1</span> <span class="op">=</span> <span class="var">multi</span><span class="punc">.</span><span class="fn">MultiComparison</span><span class="punc">(</span><span class="var">sub1</span><span class="punc">[</span><span class="str">'DEPTH_RIMFLOOR_TOPOG'</span><span class="punc">],</span> <span class="var">sub1</span><span class="punc">[</span><span class="str">'diameter_category'</span><span class="punc">])</span>
+<span class="var">res1</span> <span class="op">=</span> <span class="var">mc1</span><span class="punc">.</span><span class="fn">tukeyhsd</span><span class="punc">()</span>
+<span class="fn">print</span><span class="punc">(</span><span class="var">res1</span><span class="punc">.</span><span class="fn">summary</span><span class="punc">())</span></pre>
+    </div>
+
+    <h3>Tukey HSD Output</h3>
+    <div class="data-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Group 1</th>
+            <th>Group 2</th>
+            <th>Mean Diff</th>
+            <th>p-adj</th>
+            <th>Lower</th>
+            <th>Upper</th>
+            <th>Reject</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-hi">Basin</td>
+            <td class="row-hi">Large</td>
+            <td class="row-hi">-0.2064</td>
+            <td class="row-hi">0.0</td>
+            <td class="row-hi">-0.2932</td>
+            <td class="row-hi">-0.1196</td>
+            <td class="row-hi">True</td>
+          </tr>
+          <tr>
+            <td>Basin</td>
+            <td>Medium</td>
+            <td>-0.7931</td>
+            <td>0.0</td>
+            <td>-0.8779</td>
+            <td>-0.7083</td>
+            <td>True</td>
+          </tr>
+          <tr>
+            <td>Basin</td>
+            <td>Small</td>
+            <td>-1.0458</td>
+            <td>0.0</td>
+            <td>-1.1307</td>
+            <td>-0.9610</td>
+            <td>True</td>
+          </tr>
+          <tr>
+            <td>Large</td>
+            <td>Medium</td>
+            <td>-0.5867</td>
+            <td>0.0</td>
+            <td>-0.6059</td>
+            <td>-0.5675</td>
+            <td>True</td>
+          </tr>
+          <tr>
+            <td>Large</td>
+            <td>Small</td>
+            <td>-0.8394</td>
+            <td>0.0</td>
+            <td>-0.8588</td>
+            <td>-0.8201</td>
+            <td>True</td>
+          </tr>
+          <tr>
+            <td>Medium</td>
+            <td>Small</td>
+            <td>-0.2527</td>
+            <td>0.0</td>
+            <td>-0.2588</td>
+            <td>-0.2467</td>
+            <td>True</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <p><strong>Interpretation: Confirming the Plateau Theory</strong></p>
+      <br>
+      <p>The post hoc analysis shows a <code>reject = True</code> and an adjusted p-value of 0.0 for every single pairwise comparison. This means that the mean crater depth is statistically significantly different between <em>every</em> size category.</p>
+      <br>
+      <p>However, when we analyze the magnitude of these differences (the <code>Mean Diff</code>), it confirms the structural theory we derived from our earlier bivariate visualizations. For instance, the difference in depth between Small and Large craters is substantial (-0.8394 km). Yet, when moving from a Large crater to a massive Basin structure, the depth only increases by -0.2064 km. This statistical evidence perfectly aligns with the geological "plateau" theory: while impacts initially excavate deeper, the maximum depth of the largest craters is inherently constrained by crustal rebound and long-term geological infilling.</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="post-footer">
+      <div class="footer-tags">
+        <a href="#" class="tag">hypothesis testing</a>
+        <a href="#" class="tag">anova</a>
+        <a href="#" class="tag">statsmodels</a>
+        <a href="#" class="tag">coursera</a>
+        <a href="#" class="tag">python</a>
+      </div>
+      <div class="footer-course">
+        Data Analysis and Interpretation<br>
+        Wesleyan University via Coursera<br>
+        <span style="color:#ccc">Robbins (2019) · NASA PDS</span>
+      </div>
+    </div>
+
+  </div><!-- /.page-wrap -->
+</body>
+
+</html>

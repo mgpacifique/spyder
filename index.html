@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="A frequency distribution analysis of three variables from the Robbins Mars Crater Database — written as part of the Data Analysis and Interpretation course on Coursera.">
-  <title>Frequency Distributions: A First Look at Mars Craters</title>
+    content="Investigating the association between Impact Crater Diameter and Depth Using the Robbins Global Martian Crater Database.">
+  <title>Scars on Mars: Introduction</title>
 
   <link rel="icon" href="images/download%20(7).jpg" type="image/jpeg">
   <link rel="shortcut icon" href="images/download%20(7).jpg" type="image/jpeg">
@@ -40,6 +40,31 @@
       line-height: 1.75;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
+    }
+
+    /* ─── Header Nav ─── */
+    .top-nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 24px 32px;
+      z-index: 10;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .top-nav a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+    .top-nav a:hover {
+      color: #fff;
     }
 
     /* ─── Hero ─── */
@@ -123,20 +148,24 @@
 
     h3 {
       font-family: 'Inter', sans-serif;
-      font-size: 1.05rem;
+      font-size: 1.15rem;
       font-weight: 600;
       color: #111;
       margin: 36px 0 10px;
       letter-spacing: -0.01em;
     }
 
+    h4 {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #333;
+      margin: 20px 0 5px;
+    }
+
     p {
       color: #333;
       margin-bottom: 20px;
-    }
-
-    p:last-child {
-      margin-bottom: 0;
     }
 
     a {
@@ -153,8 +182,13 @@
       font-weight: 600;
     }
 
-    em {
-      font-style: italic;
+    ul {
+      margin: 0 0 20px 20px;
+      color: #333;
+    }
+
+    li {
+      margin-bottom: 8px;
     }
 
     /* ─── Section divider ─── */
@@ -164,7 +198,7 @@
       margin: 56px 0 0;
     }
 
-    /* ─── Byline / intro block ─── */
+    /* ─── Byline ─── */
     .byline {
       padding: 36px 0 0;
       border-bottom: 1px solid #e8e8e8;
@@ -213,336 +247,59 @@
       padding-left: 22px;
     }
 
-    /* ─── Info box (gray callout) ─── */
-    .infobox {
-      background: #f2f2f2;
-      border-radius: 4px;
-      padding: 22px 26px;
-      margin: 28px 0;
-      font-size: 0.9rem;
-      color: #333;
-    }
-
-    .infobox p {
-      margin-bottom: 6px;
-      color: #333;
-    }
-
-    .infobox p:last-child {
-      margin-bottom: 0;
-    }
-
-    .infobox strong {
-      color: #111;
-    }
-
-    /* ─── Code block ─── */
-    .code-wrap {
-      margin: 28px 0;
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    .code-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #1e1e2e;
-      padding: 10px 16px;
-    }
-
-    .code-bar-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .code-dots {
-      display: flex;
-      gap: 5px;
-    }
-
-    .code-dots span {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-    }
-
-    .code-dots span:nth-child(1) {
-      background: #ff5f57;
-    }
-
-    .code-dots span:nth-child(2) {
-      background: #febc2e;
-    }
-
-    .code-dots span:nth-child(3) {
-      background: #28c840;
-    }
-
-    .code-filename {
-      font-family: 'Fira Code', monospace;
-      font-size: 0.72rem;
-      color: rgba(255, 255, 255, 0.38);
-      letter-spacing: 0.07em;
-    }
-
-    .code-lang-badge {
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 3px;
-      padding: 1px 7px;
-    }
-
-    pre {
-      background: #0f0f1a;
-      padding: 22px 24px;
-      overflow-x: auto;
-      margin: 0;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.825rem;
-      line-height: 1.8;
-      color: #cdd6f4;
-    }
-
-    /* Syntax */
-    .kw {
-      color: #cba6f7;
-    }
-
-    .fn {
-      color: #89dceb;
-    }
-
-    .str {
-      color: #a6e3a1;
-    }
-
-    .cmt {
-      color: #585b70;
-      font-style: italic;
-    }
-
-    .num {
-      color: #fab387;
-    }
-
-    .cls {
-      color: #89b4fa;
-    }
-
-    .op {
-      color: #89dceb;
-    }
-
-    .var {
-      color: #cdd6f4;
-    }
-
-    .punc {
-      color: #89dceb;
-    }
-
-    /* ─── Data table ─── */
-    .var-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 36px 0 10px;
-    }
-
-    .var-label-text {
-      font-family: 'Fira Code', monospace;
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: #111;
-      background: #f0f0f0;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 3px 10px;
-    }
-
-    .var-type {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #888;
-      margin-left: auto;
-    }
-
-    .data-table-wrap {
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-      overflow: hidden;
-      margin-bottom: 6px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.84rem;
-    }
-
-    thead tr {
-      background: #f8f8f8;
-    }
-
-    thead th {
-      text-align: left;
-      padding: 10px 16px;
-      font-size: 0.68rem;
-      font-weight: 600;
-      color: #888;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      border-bottom: 1px solid #e0e0e0;
-    }
-
-    tbody tr {
-      border-bottom: 1px solid #f0f0f0;
-      transition: background 0.1s;
-    }
-
-    tbody tr:last-child {
-      border-bottom: none;
-    }
-
-    tbody tr:hover {
-      background: #fafafa;
-    }
-
-    tbody td {
-      padding: 10px 16px;
-      color: #333;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.8rem;
-    }
-
-    td.row-hi {
-      color: #111;
-      font-weight: 500;
-    }
-
-    .bar-cell {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .bar {
-      height: 4px;
-      border-radius: 2px;
-      min-width: 2px;
-      background: #111;
-      opacity: 0.75;
-    }
-
-    .table-note {
-      font-size: 0.75rem;
-      color: #999;
-      margin-top: 6px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    /* ─── Callout variants ─── */
+    /* ─── Callout ─── */
     .callout {
       border-left: 3px solid;
       border-radius: 0 4px 4px 0;
-      padding: 16px 20px;
-      margin: 28px 0;
-      font-size: 0.9rem;
+      padding: 22px 26px;
+      margin: 36px 0;
+      font-size: 0.95rem;
       line-height: 1.65;
-    }
-
-    .callout-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 600;
-      font-size: 0.82rem;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-
-    .callout-title i {
-      font-size: 0.8rem;
-    }
-
-    .callout p {
-      color: inherit;
-      font-size: 0.9rem;
-      margin: 0;
-    }
-
-    .callout.note {
       background: #f5f8ff;
       border-color: #0057ff;
       color: #2a3f6f;
     }
 
-    .callout.note .callout-title {
-      color: #0057ff;
+    .callout p {
+      margin-bottom: 12px;
+      color: inherit;
+    }
+    .callout p:last-child {
+      margin-bottom: 0;
     }
 
-    .callout.warn {
-      background: #fffbf0;
-      border-color: #c8860a;
-      color: #5a3c05;
-    }
-
-    .callout.warn .callout-title {
-      color: #c8860a;
-    }
-
-    .callout.ok {
-      background: #f2faf4;
-      border-color: #1a7a3a;
-      color: #1a3a26;
-    }
-
-    .callout.ok .callout-title {
-      color: #1a7a3a;
-    }
-
-    /* ─── Stats row ─── */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: #e0e0e0;
-      border: 1px solid #e0e0e0;
+    /* ─── Variables list ─── */
+    .var-list {
+      margin: 20px 0;
+      padding: 20px;
+      background: #f9f9f9;
+      border: 1px solid #eee;
       border-radius: 6px;
-      overflow: hidden;
-      margin: 28px 0;
     }
 
-    .stat-cell {
-      background: #fff;
-      padding: 20px 16px;
-      text-align: center;
+    .var-item {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    
+    .var-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
     }
 
-    .stat-num {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.75rem;
+    .var-name {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
       color: #111;
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
-    .stat-desc {
-      font-size: 0.72rem;
-      color: #888;
-      line-height: 1.4;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 3px 8px;
+      display: inline-block;
+      margin-bottom: 6px;
     }
 
     /* ─── Footer ─── */
@@ -587,30 +344,38 @@
       line-height: 1.6;
     }
 
-    @media (max-width: 640px) {
-      .hero {
-        height: 400px;
-      }
-
-      .stats-row {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .page-wrap {
-        padding: 0 18px;
-      }
-
-      pre {
-        font-size: 0.75rem;
-      }
+    .paper-block {
+      margin-bottom: 32px;
     }
+    .paper-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+    .paper-authors {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 12px;
+    }
+
+    .references {
+      font-size: 0.85rem;
+      color: #555;
+      line-height: 1.6;
+    }
+    .references p {
+      margin-bottom: 12px;
+      padding-left: 2em;
+      text-indent: -2em;
+    }
+
   </style>
 </head>
 
 <body>
 
-  <div class="top-nav" style="position: absolute; top: 0; left: 0; right: 0; padding: 24px 32px; z-index: 10; display: flex; justify-content: flex-end; align-items: center;">
-    <a href="data_management.html" style="color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.2s;">Part 2: Data Management <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i></a>
+  <div class="top-nav">
+    <a href="frequency_distribution.html">Part 1: Frequency Distribution <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i></a>
   </div>
 
   <!-- ══════ HERO ══════ -->
@@ -619,13 +384,12 @@
     <div class="hero-content">
       <div class="hero-eyebrow">
         <i class="fa-solid fa-satellite-dish"></i>
-        Data Analysis &amp; Interpretation — Week 2
+        Data Analysis &amp; Interpretation — Week 1
       </div>
-      <h1>Frequency Distributions:<br>A First Look at Mars Craters</h1>
+      <h1>Scars on Mars:<br>What Crater Depth Tells Us About a Planet's Ancient History</h1>
       <div class="hero-meta">
-        <span><i class="fa-regular fa-calendar"></i> April 17, 2026</span>
         <span><i class="fa-regular fa-user"></i> Pacifique Manzi</span>
-        <span><i class="fa-solid fa-database"></i> Robbins Mars Crater Database</span>
+        <span><i class="fa-solid fa-database"></i> Robbins Global Mars Crater Database</span>
       </div>
     </div>
   </div>
@@ -633,494 +397,165 @@
   <!-- ══════ BODY ══════ -->
   <div class="page-wrap">
 
-    <!-- Byline -->
     <div class="byline">
       <div class="byline-inner">
         <div class="byline-avatar"><i class="fa-solid fa-user"></i></div>
         <div>
           <div class="byline-name">Pacifique Manzi</div>
-          <div class="byline-text">Posted for <strong>Data Analysis and Interpretation</strong> — Wesleyan University
-            via Coursera &nbsp;·&nbsp; Week 2 Assignment</div>
+          <div class="byline-text">Posted for <strong>Data Analysis and Interpretation</strong> — Wesleyan University via Coursera &nbsp;·&nbsp; Week 1 Assignment</div>
         </div>
       </div>
     </div>
 
     <!-- Lead -->
     <p class="lead">
-      Before you can say anything meaningful about data, you have to look at it — really look at it. This post is about
-      that first look: running frequency distributions on three variables from the Mars crater database and figuring out
-      what kind of data we're actually working with.
+      Investigating the association between Impact Crater Diameter and Depth Using the Robbins Global Martian Crater Database.
     </p>
 
-    <p>The dataset is the <strong>Robbins Global Mars Crater Database</strong>, a catalog of every confirmed impact
-      crater on the Martian surface down to 1 km in diameter. It contains 384,343 rows. My three variables are crater
-      diameter, crater depth, and ejecta morphology classification — chosen because they sit at the heart of the
-      research question I developed in Week 1: do larger craters become proportionally shallower over time?</p>
+    <p>When I first opened the Mars Crater codebook, I honestly wasn't sure what I was looking at. Over three hundred thousand impact craters, each one catalogued with coordinates, size, depth, morphology, ejecta type, and a degradation score. It felt overwhelming in the best possible way.</p>
+    
+    <p>Mars is one of the most cratered surfaces in the solar system that we can actually study up close, and unlike Earth (where erosion, tectonics, and life erase impact craters within millions of years), Mars preserves craters across billions of years of history. Every crater is, in a sense, a frozen moment, a snapshot of what the planet looked like the day something slammed into it. That's what pulled me in.</p>
 
-    <div class="infobox">
-      <p><strong>Dataset:</strong> Robbins, S. J. (2019). <em>Mars Global Crater Catalog.</em> NASA Planetary Data
-        System.</p>
-      <p><strong>Variables selected:</strong> <code>DIAM_CIRCLE_IMAGE</code> &nbsp;·&nbsp;
-        <code>DEPTH_RIMFLOOR_TOPOG</code> &nbsp;·&nbsp; <code>MORPHOLOGY_EJECTA_1</code>
-      </p>
-      <p><strong>Course:</strong> Data Analysis and Interpretation — Week 2, Frequency Distributions</p>
-    </div>
-
-    <!-- ══ PROGRAM ══ -->
     <hr class="section-rule">
-    <h2><i class="fa-solid fa-code" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>The Program</h2>
+    <h2>The Research Question</h2>
 
-    <p>The code is straightforward. I'm using <code>pandas.cut()</code> to bin the two continuous variables into ten
-      equal-width intervals, then <code>value_counts()</code> to count each bin. For the categorical variable,
-      <code>value_counts(dropna=False)</code> is essential — I need NaN to appear in the output rather than get silently
-      discarded.
-    </p>
+    <p>The simplest, most elegant question I could ask with this dataset is:</p>
+    <h3 style="text-align: center; margin: 40px 0;"><em>Are bigger craters deeper?</em></h3>
+    
+    <p>It sounds almost too obvious to be interesting. Of course a bigger impact would make a deeper hole, right? But here's where it gets genuinely surprising: the answer is yes, but not in the way you'd expect. And why it's not proportional turns out to be one of the most fascinating stories in planetary science.</p>
 
-    <div class="code-wrap">
-      <div class="code-bar">
-        <div class="code-bar-left">
-          <div class="code-dots"><span></span><span></span><span></span></div>
-          <span class="code-filename">marscrater.ipynb</span>
-        </div>
-        <span class="code-lang-badge">Python</span>
-      </div>
-      <pre><span class="cmt">## Importing modules: pandas and numpy alongside the mars crater dataset</span>
-<span class="kw">import</span> <span class="cls">pandas</span> <span class="kw">as</span> <span class="var">pd</span>
-<span class="kw">import</span> <span class="cls">numpy</span>  <span class="kw">as</span> <span class="var">np</span>
-
-<span class="var">data</span> <span class="op">=</span> <span class="var">pd</span><span class="punc">.</span><span class="fn">read_csv</span><span class="punc">(</span><span class="str">"marscrater_pds.csv"</span><span class="punc">,</span> low_memory<span class="op">=</span><span class="kw">False</span><span class="punc">)</span>
-
-<span class="cmt">## ── Variable 1: DIAM_CIRCLE_IMAGE (diameter, numeric) ──</span>
-<span class="var">diam_freq</span>  <span class="op">=</span> <span class="var">pd</span><span class="punc">.</span><span class="fn">cut</span><span class="punc">(</span><span class="var">data</span><span class="punc">[</span><span class="str">'DIAM_CIRCLE_IMAGE'</span><span class="punc">],</span> bins<span class="op">=</span><span class="num">10</span><span class="punc">)</span>
-<span class="var">diam_table</span> <span class="op">=</span> <span class="var">diam_freq</span><span class="punc">.</span><span class="fn">value_counts</span><span class="punc">()</span><span class="punc">.</span><span class="fn">sort_index</span><span class="punc">()</span><span class="punc">.</span><span class="fn">reset_index</span><span class="punc">()</span>
-<span class="var">diam_table</span><span class="punc">.</span><span class="var">columns</span> <span class="op">=</span> <span class="punc">[</span><span class="str">'Diameter Range (km)'</span><span class="punc">,</span> <span class="str">'Count'</span><span class="punc">]</span>
-<span class="var">diam_table</span><span class="punc">[</span><span class="str">'Percentage (%)'</span><span class="punc">]</span> <span class="op">=</span> <span class="punc">(</span>
-    <span class="var">diam_table</span><span class="punc">[</span><span class="str">'Count'</span><span class="punc">]</span> <span class="op">/</span> <span class="var">diam_table</span><span class="punc">[</span><span class="str">'Count'</span><span class="punc">]</span><span class="punc">.</span><span class="fn">sum</span><span class="punc">()</span> <span class="op">*</span> <span class="num">100</span>
-<span class="punc">)</span><span class="punc">.</span><span class="fn">round</span><span class="punc">(</span><span class="num">2</span><span class="punc">)</span>
-<span class="fn">print</span><span class="punc">(</span><span class="var">diam_table</span><span class="punc">)</span>
-
-<span class="cmt">## ── Variable 2: DEPTH_RIMFLOOR_TOPOG (depth, numeric) ──</span>
-<span class="var">depth_freq</span>  <span class="op">=</span> <span class="var">pd</span><span class="punc">.</span><span class="fn">cut</span><span class="punc">(</span><span class="var">data</span><span class="punc">[</span><span class="str">'DEPTH_RIMFLOOR_TOPOG'</span><span class="punc">],</span> bins<span class="op">=</span><span class="num">10</span><span class="punc">)</span>
-<span class="var">depth_table</span> <span class="op">=</span> <span class="var">depth_freq</span><span class="punc">.</span><span class="fn">value_counts</span><span class="punc">()</span><span class="punc">.</span><span class="fn">sort_index</span><span class="punc">()</span><span class="punc">.</span><span class="fn">reset_index</span><span class="punc">()</span>
-<span class="var">depth_table</span><span class="punc">.</span><span class="var">columns</span> <span class="op">=</span> <span class="punc">[</span><span class="str">'Depth Range (km)'</span><span class="punc">,</span> <span class="str">'Count'</span><span class="punc">]</span>
-<span class="fn">print</span><span class="punc">(</span><span class="var">depth_table</span><span class="punc">)</span>
-
-<span class="cmt">## ── Variable 3: MORPHOLOGY_EJECTA_1 (ejecta type, categorical) ──</span>
-<span class="var">morph_table</span> <span class="op">=</span> <span class="var">data</span><span class="punc">[</span><span class="str">'MORPHOLOGY_EJECTA_1'</span><span class="punc">]</span><span class="punc">.</span><span class="fn">value_counts</span><span class="punc">(</span>dropna<span class="op">=</span><span class="kw">False</span><span class="punc">)</span><span class="punc">.</span><span class="fn">reset_index</span><span class="punc">()</span>
-<span class="var">morph_table</span><span class="punc">.</span><span class="var">columns</span> <span class="op">=</span> <span class="punc">[</span><span class="str">'Ejecta Morphology'</span><span class="punc">,</span> <span class="str">'Count'</span><span class="punc">]</span>
-<span class="fn">print</span><span class="punc">(</span><span class="var">morph_table</span><span class="punc">)</span></pre>
-    </div>
-
-    <!-- ══ OUTPUT ══ -->
     <hr class="section-rule">
-    <h2><i class="fa-solid fa-chart-bar" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>The Output</h2>
+    <h2>My Variables</h2>
+    <p>From the Robbins codebook, I selected two primary variables:</p>
 
-    <p>Three tables came out of the run. I'll look at each one in turn.</p>
-
-    <!-- Diameter -->
-    <div class="var-label">
-      <span class="var-label-text">DIAM_CIRCLE_IMAGE</span>
-      <span class="var-type"><i class="fa-solid fa-ruler-horizontal" style="margin-right:4px;"></i>Numeric ·
-        continuous</span>
+    <div class="var-list">
+      <div class="var-item">
+        <span class="var-name">DIAM_CIRCLE_IMAGE</span>
+        <p style="font-size:0.9rem; margin:6px 0 0;">Crater diameter in kilometers, measured from the best-fit circle to the crater rim in orbital images. <br><strong>Role:</strong> Independent variable (X)</p>
+      </div>
+      <div class="var-item">
+        <span class="var-name">DEPTH_RIMFLOOR_TOPOG</span>
+        <p style="font-size:0.9rem; margin:6px 0 0;">Crater depth in kilometers, measured from the average rim height to the average floor elevation using MOLA topographic data. <br><strong>Role:</strong> Dependent variable (Y)</p>
+      </div>
     </div>
 
-    <div class="data-table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Diameter range (km)</th>
-            <th>Count</th>
-            <th>%</th>
-            <th>Distribution</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="row-hi">0</td>
-            <td>(-0.163, 117.322]</td>
-            <td class="row-hi">384,160</td>
-            <td>99.95</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:180px"></div> 99.95 %
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>(117.322, 233.644]</td>
-            <td>148</td>
-            <td>0.04</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:1px"></div> 0.04 %
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>(233.644, 349.966]</td>
-            <td>24</td>
-            <td>0.01</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:1px"></div> 0.01 %
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>(349.966, 466.288]</td>
-            <td>6</td>
-            <td>0.00</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:1px"></div> &lt;0.01 %
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>(466.288, 582.610]</td>
-            <td>2</td>
-            <td>0.00</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:1px"></div> &lt;0.01 %
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>(582.610, 698.932]</td>
-            <td>1</td>
-            <td>0.00</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:1px"></div> &lt;0.01 %
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>6</td>
-            <td>(698.932, 815.254]</td>
-            <td>0</td>
-            <td>0.00</td>
-            <td>—</td>
-          </tr>
-          <tr>
-            <td>7</td>
-            <td>(815.254, 931.576]</td>
-            <td>0</td>
-            <td>0.00</td>
-            <td>—</td>
-          </tr>
-          <tr>
-            <td>8</td>
-            <td>(931.576, 1047.898]</td>
-            <td>0</td>
-            <td>0.00</td>
-            <td>—</td>
-          </tr>
-          <tr>
-            <td>9</td>
-            <td>(1047.898, 1164.220]</td>
-            <td>2</td>
-            <td>0.00</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:1px"></div> &lt;0.01 %
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="table-note"><i class="fa-solid fa-circle-info"></i> No missing values. Total n = 384,343.</p>
+    <p>I also included several contextual variables for my personal codebook:</p>
 
-    <!-- Depth -->
-    <div class="var-label">
-      <span class="var-label-text">DEPTH_RIMFLOOR_TOPOG</span>
-      <span class="var-type"><i class="fa-solid fa-arrow-down" style="margin-right:4px;"></i>Numeric · continuous</span>
+    <div class="var-list">
+      <div class="var-item">
+        <span class="var-name">LATITUDE_CIRCLE_IMAGE</span>
+        <p style="font-size:0.9rem; margin:6px 0 0;">Crater center latitude (°N).<br><strong>Why I kept it:</strong> Latitude reflects geological age and terrain type — key control variable.</p>
+      </div>
+      <div class="var-item">
+        <span class="var-name">LONGITUDE_CIRCLE_IMAGE</span>
+        <p style="font-size:0.9rem; margin:6px 0 0;">Crater center longitude (°E).<br><strong>Why I kept it:</strong> For spatial mapping.</p>
+      </div>
+      <div class="var-item">
+        <span class="var-name">MORPHOLOGY_EJECTA_1</span>
+        <p style="font-size:0.9rem; margin:6px 0 0;">Ejecta layer morphology classification.<br><strong>Why I kept it:</strong> Signals subsurface ice content at time of impact.</p>
+      </div>
+      <div class="var-item">
+        <span class="var-name">NUMBER_LAYERS</span>
+        <p style="font-size:0.9rem; margin:6px 0 0;">Number of ejecta layers.<br><strong>Why I kept it:</strong> Proxy for target material composition.</p>
+      </div>
+      <div class="var-item">
+        <span class="var-name">DEGRADATION_STATE</span>
+        <p style="font-size:0.9rem; margin:6px 0 0;">Crater preservation quality (1–5 scale).<br><strong>Why I kept it:</strong> Controls for erosion in analysis.</p>
+      </div>
     </div>
 
-    <div class="data-table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Depth range (km)</th>
-            <th>Count</th>
-            <th>Distribution</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="row-hi">0</td>
-            <td>(-0.425, 0.117]</td>
-            <td class="row-hi">325,454</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:180px"></div> 84.7 %
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>(0.117, 0.654]</td>
-            <td>45,769</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:24px"></div> 11.9 %
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>(0.654, 1.191]</td>
-            <td>10,194</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:5px"></div> 2.65 %
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>(1.191, 1.728]</td>
-            <td>2,191</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:2px"></div> 0.57 %
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>(1.728, 2.265]</td>
-            <td>599</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:1px"></div> 0.16 %
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>(2.265, 2.802]</td>
-            <td>108</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:1px"></div> 0.03 %
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>6</td>
-            <td>(2.802, 3.339]</td>
-            <td>20</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:1px"></div> &lt;0.01 %
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>7</td>
-            <td>(3.339, 3.876]</td>
-            <td>4</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:1px"></div> &lt;0.01 %
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>8</td>
-            <td>(3.876, 4.413]</td>
-            <td>1</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:1px"></div> &lt;0.01 %
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>9</td>
-            <td>(4.413, 4.950]</td>
-            <td>3</td>
-            <td>
-              <div class="bar-cell">
-                <div class="bar" style="width:1px"></div> &lt;0.01 %
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="table-note"><i class="fa-solid fa-triangle-exclamation"></i> First bin contains craters with recorded
-      depth = 0 — not flat craters, but unmeasured ones.</p>
+    <p><strong>A note on filtering:</strong> 307,529 craters in the dataset (roughly 80%) have a recorded depth of 0. This means depth was either unmeasurable or not recorded typically for very small or very degraded craters. For my analysis I will filter to craters where <code>DEPTH_RIMFLOOR_TOPOG > 0</code>, leaving approximately 76,800 craters. This is still an extraordinarily rich sample.</p>
 
-    <!-- Morphology -->
-    <div class="var-label">
-      <span class="var-label-text">MORPHOLOGY_EJECTA_1</span>
-      <span class="var-type"><i class="fa-solid fa-tag" style="margin-right:4px;"></i>Categorical · string</span>
-    </div>
-
-    <div class="data-table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Ejecta morphology label</th>
-            <th>Count (approx.)</th>
-            <th>Notes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="row-hi">0</td>
-            <td style="color:#c0392b;font-style:italic">NaN — not recorded</td>
-            <td class="row-hi">~283,000+</td>
-            <td style="color:#888">Dominant category</td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>Rd</td>
-            <td>~27,000</td>
-            <td style="color:#888">Radial ejecta</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>SLERC</td>
-            <td>~1,100</td>
-            <td style="color:#888">Single-layer, circular</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>SLERS</td>
-            <td>~900</td>
-            <td style="color:#888">Single-layer, sinuous</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>DLERC</td>
-            <td>~700</td>
-            <td style="color:#888">Double-layer, circular</td>
-          </tr>
-          <tr>
-            <td>5+</td>
-            <td colspan="3" style="color:#aaa;font-style:italic">151 additional rare labels, each accounting for a
-              fraction of a percent…</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="table-note"><i class="fa-solid fa-circle-info"></i> 156 unique labels total. <code>dropna=False</code> was
-      used to surface NaN as a distinct value.</p>
-
-    <!-- ══ ANALYSIS ══ -->
     <hr class="section-rule">
-    <h2><i class="fa-solid fa-magnifying-glass" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>What the
-      Distributions Tell Us</h2>
+    <h2>The Second Topic: Geological Modification Over Time</h2>
 
-    <div class="stats-row">
-      <div class="stat-cell">
-        <div class="stat-num">384,343</div>
-        <div class="stat-desc">total craters in the dataset</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-num">99.95%</div>
-        <div class="stat-desc">craters smaller than 117 km across</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-num">84.7%</div>
-        <div class="stat-desc">depth records at or near zero</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-num">156</div>
-        <div class="stat-desc">unique ejecta morphology labels</div>
-      </div>
+    <p>Here's is where the research question gets layered. My independent variable, diameter, isn't just a measure of how big the impactor was. It's also a proxy for how much has happened to the crater since it formed. Bigger craters have been sitting on the Martian surface longer on average, exposed to wind erosion, dust deposition, volcanic resurfacing, and ancient water activity. They've had more time to be filled in.</p>
+    <p>So my second topic is post-impact crater infilling and preservation, and I'm asking whether the depth deficit we see in larger craters is the result of physics (large craters are inherently flatter even when fresh) or geology (large craters have been filled in over billions of years), or, most likely, both.</p>
+
+    <hr class="section-rule">
+    <h2>What the Literature Says</h2>
+    <p>Before forming my hypothesis, I reviewed five key resources. Here's what they collectively taught me:</p>
+
+    <div class="paper-block">
+      <div class="paper-title">1. The Physics of Why Large Craters Are Shallow</div>
+      <div class="paper-authors">Wünnemann & Ivanov (2003) — "Numerical modelling of the impact crater depth–diameter dependence in an acoustically fluidized target"</div>
+      <p>This paper was the first thing that changed my intuition. Using 2D computer simulations of the entire impact process, Wünnemann and Ivanov showed that crater depth is not a simple linear function of diameter; it's governed by a phenomenon called acoustic fluidization. Here's the mechanism: when a larger impactor strikes, the shockwave temporarily causes the surrounding rock to behave like a fluid. The crater floor bounces upward, a process called central peak uplift, and the walls collapse inward, terrace by terrace. What you're left with is not a deep bowl but a wide, flat-floored structure with a central mountain and stepped walls. Planetary scientists call these <em>complex craters</em>, and they are by definition shallower relative to their diameter than their smaller, bowl-shaped cousins (simple craters).</p>
+      <p>On Mars specifically, the transition from simple to complex craters occurs at diameters between 5 and 8 km, smaller than on the Moon because Mars has higher surface gravity. What this means for my analysis: even before erosion touches a crater, the depth-diameter relationship is already sub-linear. Doubling the diameter never doubles the depth.</p>
     </div>
 
-    <h3>Diameter — complete data, extreme skew</h3>
-
-    <p>The diameter distribution is about as lopsided as a distribution can get. 384,160 craters — 99.95% of the entire
-      catalog — fall within the first bin, meaning their diameter is below roughly 117 km. The remaining bins are nearly
-      empty: 148 craters between 117 and 234 km, 24 between 234 and 350 km, and at the far end, two outliers exceeding
-      1,000 km. Those two are almost certainly recording Hellas Planitia (~2,300 km) and Argyre (~1,200 km), the two
-      largest confirmed impact basins on Mars.</p>
-
-    <p>There is no missing data here at all. Every crater has a diameter because diameter is the primary attribute used
-      to identify and catalog craters in the first place — you can't have a crater without measuring it. The shape of
-      the distribution is a classic <strong>power law</strong>: the same type seen in asteroid size populations, where
-      small bodies vastly outnumber large ones. This means the diameter variable is both complete and reliable, but its
-      extreme skewness means any regression or correlation analysis will need a log-transformation before parametric
-      statistics apply.</p>
-
-    <div class="callout note">
-      <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> For the next step</div>
-      <p>A log-transformed diameter variable will almost certainly be necessary before any regression against depth. The
-        raw distribution violates every assumption of normality.</p>
+    <div class="paper-block">
+      <div class="paper-title">2. The Best Empirical Benchmark</div>
+      <div class="paper-authors">Tornabene et al. (2017) — "A depth versus diameter scaling relationship for the best-preserved melt-bearing complex craters on Mars"</div>
+      <p>If Wünnemann & Ivanov gave me the theory, Tornabene and colleagues gave me the number to test against. Their team identified 224 craters on Mars containing "pitted floor materials", distinctive deposits of impact melt that form only right after the crater is created and that signal minimal subsequent modification. These are the freshest craters on Mars.</p>
+      <p>After removing any crater distorted by pre-existing topography, they measured 92 craters carefully and derived a best-fit scaling law: <code>depth = 0.323 * diameter^0.538</code>. That exponent, 0.538, is the critical number. Because it is less than 1, depth grows slower than diameter. A crater ten times wider is not ten times deeper; it's only about 3.4 times deeper. And this is for the freshest craters on Mars, before any infilling occurs.</p>
+      <p>When I run my own regression on the full Robbins dataset (which includes heavily eroded craters), I expect my exponent to be even lower than 0.538. How much lower will tell me how much geological modification has occurred across the planetary surface as a whole.</p>
     </div>
 
-    <h3>Depth — structural missing data encoded as zero</h3>
-
-    <p>The depth table looks, at first, like another right-skewed distribution. But there's something more significant
-      going on. That dominant first bin — 325,454 craters with a recorded depth between −0.425 and 0.117 km — contains a
-      large number of craters with depth exactly equal to <strong>zero</strong>. Not craters that are flat. Craters that
-      were never depth-measured.</p>
-
-    <p>This is a structural data problem, and it's the most important finding from the whole analysis. When depth = 0,
-      it almost certainly means the topographic data didn't exist or wasn't processed for that crater, not that the
-      crater has no bowl. Among the craters that do carry a genuine positive depth measurement, the distribution tapers
-      rapidly: 45,769 craters between 0.12 and 0.65 km, another 10,194 between 0.65 and 1.19 km, and only 8 craters
-      deeper than 3.3 km. The maximum recorded depth is ~4.95 km.</p>
-
-    <div class="callout warn">
-      <div class="callout-title"><i class="fa-solid fa-triangle-exclamation"></i> Missing data encoded as zero</div>
-      <p>Before any diameter–depth analysis, the data must be filtered to <code>DEPTH_RIMFLOOR_TOPOG &gt; 0</code>.
-        Treating zero-depth craters as measured observations would collapse the relationship we're trying to study. This
-        filter reduces the working dataset to approximately 76,800 craters — still a very rich sample.</p>
+    <div class="paper-block">
+      <div class="paper-title">3. The Historical Map of Mars</div>
+      <div class="paper-authors">Carr (1980) — "The Morphology of the Martian Surface"</div>
+      <p>Michael Carr's sweeping 1980 survey is the foundational map of Mars's geology. Writing before most modern spacecraft data existed, Carr documented every major terrain type. Two of his observations are directly relevant to my project:</p>
+      <ul>
+        <li><strong>The north-south crustal dichotomy:</strong> The southern hemisphere sits 1-3 km above the topographic datum. The northern hemisphere is lower, younger, and far more sparsely cratered; it was resurfaced by volcanism after most of the large craters had already formed. This means latitude in my dataset is a genuine geological variable.</li>
+        <li><strong>Ground ice and layered ejecta:</strong> Carr observed that Martian craters are surrounded by layered ejecta blankets with terminal ridges, a morphology completely unlike lunar craters. His explanation: large amounts of water ice in the subsurface. When an impactor struck, it didn't just excavate rock, it melted ice and produced a fluid-like ejecta flow, which affects crater depth.</li>
+      </ul>
     </div>
 
-    <h3>Ejecta morphology — a sparse, long-tailed categorical</h3>
+    <div class="paper-block">
+      <div class="paper-title">4. A Crater's Life After Impact</div>
+      <div class="paper-authors">Le Deit et al. (2013) — "Sequence of infilling events in Gale Crater, Mars"</div>
+      <p>This paper is the most visually compelling, telling the story of one specific crater—Gale Crater, a 150 km wide basin now occupied by NASA's Curiosity rover. Using orbital imagery and topographic data, Le Deit and colleagues reconstructed the complete infilling sequence of Gale over approximately 3.6 billion years.</p>
+      <p>The great central mound (Mount Sharp) is built primarily from airfall material, dust, volcanic ash, deposited year after year and cemented shut by sulfate minerals. A shallow lake formed in the deepest portions later. A periglacial environment characterized most of Gale's history, producing rock glaciers. Wind erosion has been the dominant recent force.</p>
+      <p>For my project, Gale Crater is the most powerful argument that large craters lose their depth through multiple distinct mechanisms acting over billions of years. Every process described reduces the value of <code>DEPTH_RIMFLOOR_TOPOG</code>. When my regression shows that large craters are proportionally shallower, Le Deit et al. tells me at least some of that signal is real geological history, not an artifact of measurement.</p>
+    </div>
 
-    <p>The third variable is the most visually dramatic to look at and the hardest to work with. Of the 384,343 craters
-      in the database, the majority have a blank entry for ejecta morphology. Among those that do have a label, there
-      are 156 unique strings — but most appear so rarely that they're effectively noise in any aggregate analysis. The
-      most common non-null label, "Rd" (interpreted as radial ejecta), stands well above the rest, followed by a handful
-      of more specific morphology codes that each account for a fraction of a percent of all craters.</p>
+    <div class="paper-block">
+      <div class="paper-title">5. The Database Itself</div>
+      <div class="paper-authors">Robbins (2011) — "Planetary Surface Properties, Cratering Physics, and the Volcanic History of Mars from a New Global Martian Crater Database"</div>
+      <p>No source is more important to cite than the one that created the data I am analyzing. Robbins's dissertation describes not just the methodology of building the database but also his own depth-diameter analysis. Key findings include:</p>
+      <ul>
+        <li>The simple-to-complex transition on Mars occurs between 5 and 8 km diameter.</li>
+        <li>The deepest craters at any given diameter are the best proxies for fresh, unmodified morphology. The average relationship across all craters is significantly shallower because the average includes heavily degraded examples.</li>
+        <li>Layered ejecta craters cluster at low-to-mid latitudes, consistent with ice-rich target material.</li>
+      </ul>
+    </div>
 
-    <p>The sparsity isn't random. Ejecta blankets erode. On a planet where wind, dust, and ancient volcanic resurfacing
-      have been active for billions of years, the physical structure that would let a geologist classify the ejecta type
-      simply doesn't survive for most craters. What we have is a useful variable for studying the subset of craters
-      where preservation was good — but it cannot be analyzed across the full dataset without severe selection bias.</p>
+    <hr class="section-rule">
+    
+    <div class="callout">
+      <div style="font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: #0057ff; margin-bottom: 15px;">My Hypothesis</div>
+      <p>Based on the convergence of these five sources, I am ready to state a formal hypothesis:</p>
+      <p><em>Crater diameter (<code>DIAM_CIRCLE_IMAGE</code>) will be positively but sub-linearly associated with crater depth (<code>DEPTH_RIMFLOOR_TOPOG</code>) in the Robbins Mars crater database, such that larger craters are proportionally shallower than smaller craters. The depth-diameter scaling exponent derived from the full dataset will be lower than the 0.538 benchmark established by Tornabene et al. (2017) for best-preserved craters, reflecting the cumulative effect of billions of years of aeolian infilling, fluvial sedimentation, and volcanic resurfacing that preferentially reduces the measurable depth of larger, older craters.</em></p>
+      <p><strong>In plain English:</strong> yes, bigger craters are deeper — but not nearly as much deeper as you'd expect. Physics makes them flat from birth, and time has been quietly filling them in ever since.</p>
+    </div>
 
-    <div class="callout ok">
-      <div class="callout-title"><i class="fa-solid fa-circle-check"></i> Summary</div>
-      <p>All three variables are non-normally distributed. Diameter is complete but requires log-transformation. Depth
-        carries structural missing data that must be filtered before any analysis. Ejecta morphology is too sparse for
-        full-dataset use and should only be studied on a preserved-crater subset. These constraints will directly shape
-        every analytical decision in the weeks ahead.</p>
+    <h2>Why This Matters</h2>
+    <p>Mars's craters are not just geological curiosities. They are time capsules. The depth-diameter relationship, measured across the entire planetary surface, is a fingerprint of billions of years of climate and geological history, ancient lakes, glaciers, volcanic eruptions, dust storms. Every deviation from the expected scaling law is a clue that something happened in that spot, at some point, that we don't yet fully understand.</p>
+    <p>That's what I'm going to spend the rest of this course trying to read.</p>
+
+    <hr class="section-rule">
+    <h2>References</h2>
+    <div class="references">
+      <p>Carr, M. H. (1980). The morphology of the Martian surface. <em>Space Science Reviews</em>, 25, 231–284.</p>
+      <p>Le Deit, L., Hauber, E., Fueten, F., Pondrelli, M., Rossi, A. P., & Jaumann, R. (2013). Sequence of infilling events in Gale Crater, Mars: Results from morphology, stratigraphy, and mineralogy. <em>Journal of Geophysical Research: Planets</em>, 118, 2439–2473. https://doi.org/10.1002/2012JE004322</p>
+      <p>Robbins, S. J. (2011). <em>Planetary surface properties, cratering physics, and the volcanic history of Mars from a new global Martian crater database</em> (Doctoral dissertation). University of Colorado at Boulder.</p>
+      <p>Tornabene, L. L., Watters, W. A., Osinski, G. R., Boyce, J. M., Harrison, T. N., Ling, V., & McEwen, A. S. (2018). A depth versus diameter scaling relationship for the best-preserved melt-bearing complex craters on Mars. <em>Icarus</em>, 299, 68–83. https://doi.org/10.1016/j.icarus.2017.07.003</p>
+      <p>Wünnemann, K., & Ivanov, B. A. (2003). Numerical modelling of the impact crater depth–diameter dependence in an acoustically fluidized target. <em>Planetary and Space Science</em>, 51, 831–845. https://doi.org/10.1016/j.pss.2003.08.001</p>
     </div>
 
     <!-- Footer -->
     <div class="post-footer">
       <div class="footer-tags">
-        <a href="#" class="tag">data science</a>
+        <a href="#" class="tag">research questions</a>
+        <a href="#" class="tag">literature review</a>
         <a href="#" class="tag">mars</a>
-        <a href="#" class="tag">frequency distribution</a>
-        <a href="#" class="tag">python</a>
-        <a href="#" class="tag">pandas</a>
-        <a href="#" class="tag">coursera</a>
-        <a href="#" class="tag">crater analysis</a>
+        <a href="#" class="tag">crater</a>
+        <a href="#" class="tag">datascience</a>
       </div>
       <div class="footer-course">
         Data Analysis and Interpretation<br>
         Wesleyan University via Coursera<br>
-        <span style="color:#ccc">Robbins (2019) · NASA PDS</span>
+        <span style="color:#ccc">Week 1 Assignment</span>
       </div>
     </div>
 

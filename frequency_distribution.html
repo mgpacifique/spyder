@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="A frequency distribution analysis of three variables from the Robbins Mars Crater Database — written as part of the Data Analysis and Interpretation course on Coursera.">
+  <title>Frequency Distributions: A First Look at Mars Craters</title>
+
+  <link rel="icon" href="images/download%20(7).jpg" type="image/jpeg">
+  <link rel="shortcut icon" href="images/download%20(7).jpg" type="image/jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* ─── Reset ─── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    /* ─── Base ─── */
+    body {
+      background: #fff;
+      color: #111;
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      position: relative;
+      height: 520px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.72) 100%),
+        url('images/Mars Wallpaper.jpg') center center / cover no-repeat;
+    }
+
+    .hero-content {
+      position: relative;
+      width: 100%;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 28px 52px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 14px;
+    }
+
+    .hero-eyebrow i {
+      font-size: 0.7rem;
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      max-width: 640px;
+    }
+
+    .hero-meta {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.55);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta i {
+      margin-right: 5px;
+    }
+
+    /* ─── Layout ─── */
+    .page-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    /* ─── Typography ─── */
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.75rem, 3.5vw, 2.4rem);
+      color: #111;
+      line-height: 1.2;
+      margin: 64px 0 18px;
+    }
+
+    h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #111;
+      margin: 36px 0 10px;
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    a {
+      color: #0057ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    strong {
+      color: #111;
+      font-weight: 600;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    /* ─── Section divider ─── */
+    .section-rule {
+      border: none;
+      border-top: 1.5px solid #e8e8e8;
+      margin: 56px 0 0;
+    }
+
+    /* ─── Byline / intro block ─── */
+    .byline {
+      padding: 36px 0 0;
+      border-bottom: 1px solid #e8e8e8;
+      margin-bottom: 0;
+    }
+
+    .byline-inner {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding-bottom: 28px;
+    }
+
+    .byline-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .byline-text {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .byline-name {
+      font-weight: 600;
+      color: #111;
+      font-size: 0.9rem;
+    }
+
+    /* ─── Intro lead ─── */
+    .lead {
+      font-size: 1.15rem;
+      color: #444;
+      line-height: 1.8;
+      margin: 40px 0 28px;
+      border-left: 3px solid #111;
+      padding-left: 22px;
+    }
+
+    /* ─── Info box (gray callout) ─── */
+    .infobox {
+      background: #f2f2f2;
+      border-radius: 4px;
+      padding: 22px 26px;
+      margin: 28px 0;
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    .infobox p {
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    .infobox p:last-child {
+      margin-bottom: 0;
+    }
+
+    .infobox strong {
+      color: #111;
+    }
+
+    /* ─── Code block ─── */
+    .code-wrap {
+      margin: 28px 0;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .code-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e1e2e;
+      padding: 10px 16px;
+    }
+
+    .code-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .code-dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .code-dots span {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    .code-dots span:nth-child(1) {
+      background: #ff5f57;
+    }
+
+    .code-dots span:nth-child(2) {
+      background: #febc2e;
+    }
+
+    .code-dots span:nth-child(3) {
+      background: #28c840;
+    }
+
+    .code-filename {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.38);
+      letter-spacing: 0.07em;
+    }
+
+    .code-lang-badge {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 3px;
+      padding: 1px 7px;
+    }
+
+    pre {
+      background: #0f0f1a;
+      padding: 22px 24px;
+      overflow-x: auto;
+      margin: 0;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.825rem;
+      line-height: 1.8;
+      color: #cdd6f4;
+    }
+
+    /* Syntax */
+    .kw {
+      color: #cba6f7;
+    }
+
+    .fn {
+      color: #89dceb;
+    }
+
+    .str {
+      color: #a6e3a1;
+    }
+
+    .cmt {
+      color: #585b70;
+      font-style: italic;
+    }
+
+    .num {
+      color: #fab387;
+    }
+
+    .cls {
+      color: #89b4fa;
+    }
+
+    .op {
+      color: #89dceb;
+    }
+
+    .var {
+      color: #cdd6f4;
+    }
+
+    .punc {
+      color: #89dceb;
+    }
+
+    /* ─── Data table ─── */
+    .var-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 36px 0 10px;
+    }
+
+    .var-label-text {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #111;
+      background: #f0f0f0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 3px 10px;
+    }
+
+    .var-type {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888;
+      margin-left: auto;
+    }
+
+    .data-table-wrap {
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    thead tr {
+      background: #f8f8f8;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 10px 16px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #f0f0f0;
+      transition: background 0.1s;
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: #fafafa;
+    }
+
+    tbody td {
+      padding: 10px 16px;
+      color: #333;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+    }
+
+    td.row-hi {
+      color: #111;
+      font-weight: 500;
+    }
+
+    .bar-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bar {
+      height: 4px;
+      border-radius: 2px;
+      min-width: 2px;
+      background: #111;
+      opacity: 0.75;
+    }
+
+    .table-note {
+      font-size: 0.75rem;
+      color: #999;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ─── Callout variants ─── */
+    .callout {
+      border-left: 3px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 16px 20px;
+      margin: 28px 0;
+      font-size: 0.9rem;
+      line-height: 1.65;
+    }
+
+    .callout-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .callout-title i {
+      font-size: 0.8rem;
+    }
+
+    .callout p {
+      color: inherit;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    .callout.note {
+      background: #f5f8ff;
+      border-color: #0057ff;
+      color: #2a3f6f;
+    }
+
+    .callout.note .callout-title {
+      color: #0057ff;
+    }
+
+    .callout.warn {
+      background: #fffbf0;
+      border-color: #c8860a;
+      color: #5a3c05;
+    }
+
+    .callout.warn .callout-title {
+      color: #c8860a;
+    }
+
+    .callout.ok {
+      background: #f2faf4;
+      border-color: #1a7a3a;
+      color: #1a3a26;
+    }
+
+    .callout.ok .callout-title {
+      color: #1a7a3a;
+    }
+
+    /* ─── Stats row ─── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: #e0e0e0;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 28px 0;
+    }
+
+    .stat-cell {
+      background: #fff;
+      padding: 20px 16px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.75rem;
+      color: #111;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-desc {
+      font-size: 0.72rem;
+      color: #888;
+      line-height: 1.4;
+    }
+
+    /* ─── Footer ─── */
+    .post-footer {
+      margin-top: 80px;
+      padding: 28px 0 60px;
+      border-top: 1.5px solid #e8e8e8;
+      display: flex;
+      align-items: flex-start;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    .footer-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 100px;
+      background: #f0f0f0;
+      color: #555;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background .15s;
+    }
+
+    .tag:hover {
+      background: #e0e0e0;
+      color: #111;
+    }
+
+    .footer-course {
+      font-size: 0.75rem;
+      color: #aaa;
+      text-align: right;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        height: 400px;
+      }
+
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .page-wrap {
+        padding: 0 18px;
+      }
+
+      pre {
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top-nav" style="position: absolute; top: 0; left: 0; right: 0; padding: 24px 32px; z-index: 10; display: flex; justify-content: space-between; align-items: center;">
+    <a href="index.html" style="color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.2s;"><i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Introduction</a>
+    <a href="data_management.html" style="color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.2s;">Part 2: Data Management <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i></a>
+  </div>
+
+  <!-- ══════ HERO ══════ -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <i class="fa-solid fa-satellite-dish"></i>
+        Data Analysis &amp; Interpretation — Week 2
+      </div>
+      <h1>Frequency Distributions:<br>A First Look at Mars Craters</h1>
+      <div class="hero-meta">
+        <span><i class="fa-regular fa-calendar"></i> April 17, 2026</span>
+        <span><i class="fa-regular fa-user"></i> Pacifique Manzi</span>
+        <span><i class="fa-solid fa-database"></i> Robbins Mars Crater Database</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ BODY ══════ -->
+  <div class="page-wrap">
+
+    <!-- Byline -->
+    <div class="byline">
+      <div class="byline-inner">
+        <div class="byline-avatar"><i class="fa-solid fa-user"></i></div>
+        <div>
+          <div class="byline-name">Pacifique Manzi</div>
+          <div class="byline-text">Posted for <strong>Data Analysis and Interpretation</strong> — Wesleyan University
+            via Coursera &nbsp;·&nbsp; Week 2 Assignment</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lead -->
+    <p class="lead">
+      Before you can say anything meaningful about data, you have to look at it — really look at it. This post is about
+      that first look: running frequency distributions on three variables from the Mars crater database and figuring out
+      what kind of data we're actually working with.
+    </p>
+
+    <p>The dataset is the <strong>Robbins Global Mars Crater Database</strong>, a catalog of every confirmed impact
+      crater on the Martian surface down to 1 km in diameter. It contains 384,343 rows. My three variables are crater
+      diameter, crater depth, and ejecta morphology classification — chosen because they sit at the heart of the
+      research question I developed in Week 1: do larger craters become proportionally shallower over time?</p>
+
+    <div class="infobox">
+      <p><strong>Dataset:</strong> Robbins, S. J. (2019). <em>Mars Global Crater Catalog.</em> NASA Planetary Data
+        System.</p>
+      <p><strong>Variables selected:</strong> <code>DIAM_CIRCLE_IMAGE</code> &nbsp;·&nbsp;
+        <code>DEPTH_RIMFLOOR_TOPOG</code> &nbsp;·&nbsp; <code>MORPHOLOGY_EJECTA_1</code>
+      </p>
+      <p><strong>Course:</strong> Data Analysis and Interpretation — Week 2, Frequency Distributions</p>
+    </div>
+
+    <!-- ══ PROGRAM ══ -->
+    <hr class="section-rule">
+    <h2><i class="fa-solid fa-code" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>The Program</h2>
+
+    <p>The code is straightforward. I'm using <code>pandas.cut()</code> to bin the two continuous variables into ten
+      equal-width intervals, then <code>value_counts()</code> to count each bin. For the categorical variable,
+      <code>value_counts(dropna=False)</code> is essential — I need NaN to appear in the output rather than get silently
+      discarded.
+    </p>
+
+    <div class="code-wrap">
+      <div class="code-bar">
+        <div class="code-bar-left">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-filename">marscrater.ipynb</span>
+        </div>
+        <span class="code-lang-badge">Python</span>
+      </div>
+      <pre><span class="cmt">## Importing modules: pandas and numpy alongside the mars crater dataset</span>
+<span class="kw">import</span> <span class="cls">pandas</span> <span class="kw">as</span> <span class="var">pd</span>
+<span class="kw">import</span> <span class="cls">numpy</span>  <span class="kw">as</span> <span class="var">np</span>
+
+<span class="var">data</span> <span class="op">=</span> <span class="var">pd</span><span class="punc">.</span><span class="fn">read_csv</span><span class="punc">(</span><span class="str">"marscrater_pds.csv"</span><span class="punc">,</span> low_memory<span class="op">=</span><span class="kw">False</span><span class="punc">)</span>
+
+<span class="cmt">## ── Variable 1: DIAM_CIRCLE_IMAGE (diameter, numeric) ──</span>
+<span class="var">diam_freq</span>  <span class="op">=</span> <span class="var">pd</span><span class="punc">.</span><span class="fn">cut</span><span class="punc">(</span><span class="var">data</span><span class="punc">[</span><span class="str">'DIAM_CIRCLE_IMAGE'</span><span class="punc">],</span> bins<span class="op">=</span><span class="num">10</span><span class="punc">)</span>
+<span class="var">diam_table</span> <span class="op">=</span> <span class="var">diam_freq</span><span class="punc">.</span><span class="fn">value_counts</span><span class="punc">()</span><span class="punc">.</span><span class="fn">sort_index</span><span class="punc">()</span><span class="punc">.</span><span class="fn">reset_index</span><span class="punc">()</span>
+<span class="var">diam_table</span><span class="punc">.</span><span class="var">columns</span> <span class="op">=</span> <span class="punc">[</span><span class="str">'Diameter Range (km)'</span><span class="punc">,</span> <span class="str">'Count'</span><span class="punc">]</span>
+<span class="var">diam_table</span><span class="punc">[</span><span class="str">'Percentage (%)'</span><span class="punc">]</span> <span class="op">=</span> <span class="punc">(</span>
+    <span class="var">diam_table</span><span class="punc">[</span><span class="str">'Count'</span><span class="punc">]</span> <span class="op">/</span> <span class="var">diam_table</span><span class="punc">[</span><span class="str">'Count'</span><span class="punc">]</span><span class="punc">.</span><span class="fn">sum</span><span class="punc">()</span> <span class="op">*</span> <span class="num">100</span>
+<span class="punc">)</span><span class="punc">.</span><span class="fn">round</span><span class="punc">(</span><span class="num">2</span><span class="punc">)</span>
+<span class="fn">print</span><span class="punc">(</span><span class="var">diam_table</span><span class="punc">)</span>
+
+<span class="cmt">## ── Variable 2: DEPTH_RIMFLOOR_TOPOG (depth, numeric) ──</span>
+<span class="var">depth_freq</span>  <span class="op">=</span> <span class="var">pd</span><span class="punc">.</span><span class="fn">cut</span><span class="punc">(</span><span class="var">data</span><span class="punc">[</span><span class="str">'DEPTH_RIMFLOOR_TOPOG'</span><span class="punc">],</span> bins<span class="op">=</span><span class="num">10</span><span class="punc">)</span>
+<span class="var">depth_table</span> <span class="op">=</span> <span class="var">depth_freq</span><span class="punc">.</span><span class="fn">value_counts</span><span class="punc">()</span><span class="punc">.</span><span class="fn">sort_index</span><span class="punc">()</span><span class="punc">.</span><span class="fn">reset_index</span><span class="punc">()</span>
+<span class="var">depth_table</span><span class="punc">.</span><span class="var">columns</span> <span class="op">=</span> <span class="punc">[</span><span class="str">'Depth Range (km)'</span><span class="punc">,</span> <span class="str">'Count'</span><span class="punc">]</span>
+<span class="fn">print</span><span class="punc">(</span><span class="var">depth_table</span><span class="punc">)</span>
+
+<span class="cmt">## ── Variable 3: MORPHOLOGY_EJECTA_1 (ejecta type, categorical) ──</span>
+<span class="var">morph_table</span> <span class="op">=</span> <span class="var">data</span><span class="punc">[</span><span class="str">'MORPHOLOGY_EJECTA_1'</span><span class="punc">]</span><span class="punc">.</span><span class="fn">value_counts</span><span class="punc">(</span>dropna<span class="op">=</span><span class="kw">False</span><span class="punc">)</span><span class="punc">.</span><span class="fn">reset_index</span><span class="punc">()</span>
+<span class="var">morph_table</span><span class="punc">.</span><span class="var">columns</span> <span class="op">=</span> <span class="punc">[</span><span class="str">'Ejecta Morphology'</span><span class="punc">,</span> <span class="str">'Count'</span><span class="punc">]</span>
+<span class="fn">print</span><span class="punc">(</span><span class="var">morph_table</span><span class="punc">)</span></pre>
+    </div>
+
+    <!-- ══ OUTPUT ══ -->
+    <hr class="section-rule">
+    <h2><i class="fa-solid fa-chart-bar" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>The Output</h2>
+
+    <p>Three tables came out of the run. I'll look at each one in turn.</p>
+
+    <!-- Diameter -->
+    <div class="var-label">
+      <span class="var-label-text">DIAM_CIRCLE_IMAGE</span>
+      <span class="var-type"><i class="fa-solid fa-ruler-horizontal" style="margin-right:4px;"></i>Numeric ·
+        continuous</span>
+    </div>
+
+    <div class="data-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Diameter range (km)</th>
+            <th>Count</th>
+            <th>%</th>
+            <th>Distribution</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-hi">0</td>
+            <td>(-0.163, 117.322]</td>
+            <td class="row-hi">384,160</td>
+            <td>99.95</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:180px"></div> 99.95 %
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>(117.322, 233.644]</td>
+            <td>148</td>
+            <td>0.04</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:1px"></div> 0.04 %
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>(233.644, 349.966]</td>
+            <td>24</td>
+            <td>0.01</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:1px"></div> 0.01 %
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>(349.966, 466.288]</td>
+            <td>6</td>
+            <td>0.00</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:1px"></div> &lt;0.01 %
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>(466.288, 582.610]</td>
+            <td>2</td>
+            <td>0.00</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:1px"></div> &lt;0.01 %
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>(582.610, 698.932]</td>
+            <td>1</td>
+            <td>0.00</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:1px"></div> &lt;0.01 %
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>(698.932, 815.254]</td>
+            <td>0</td>
+            <td>0.00</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>(815.254, 931.576]</td>
+            <td>0</td>
+            <td>0.00</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>(931.576, 1047.898]</td>
+            <td>0</td>
+            <td>0.00</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>(1047.898, 1164.220]</td>
+            <td>2</td>
+            <td>0.00</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:1px"></div> &lt;0.01 %
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note"><i class="fa-solid fa-circle-info"></i> No missing values. Total n = 384,343.</p>
+
+    <!-- Depth -->
+    <div class="var-label">
+      <span class="var-label-text">DEPTH_RIMFLOOR_TOPOG</span>
+      <span class="var-type"><i class="fa-solid fa-arrow-down" style="margin-right:4px;"></i>Numeric · continuous</span>
+    </div>
+
+    <div class="data-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Depth range (km)</th>
+            <th>Count</th>
+            <th>Distribution</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-hi">0</td>
+            <td>(-0.425, 0.117]</td>
+            <td class="row-hi">325,454</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:180px"></div> 84.7 %
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>(0.117, 0.654]</td>
+            <td>45,769</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:24px"></div> 11.9 %
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>(0.654, 1.191]</td>
+            <td>10,194</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:5px"></div> 2.65 %
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>(1.191, 1.728]</td>
+            <td>2,191</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:2px"></div> 0.57 %
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>(1.728, 2.265]</td>
+            <td>599</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:1px"></div> 0.16 %
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>(2.265, 2.802]</td>
+            <td>108</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:1px"></div> 0.03 %
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>(2.802, 3.339]</td>
+            <td>20</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:1px"></div> &lt;0.01 %
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>(3.339, 3.876]</td>
+            <td>4</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:1px"></div> &lt;0.01 %
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>(3.876, 4.413]</td>
+            <td>1</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:1px"></div> &lt;0.01 %
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>(4.413, 4.950]</td>
+            <td>3</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width:1px"></div> &lt;0.01 %
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note"><i class="fa-solid fa-triangle-exclamation"></i> First bin contains craters with recorded
+      depth = 0 — not flat craters, but unmeasured ones.</p>
+
+    <!-- Morphology -->
+    <div class="var-label">
+      <span class="var-label-text">MORPHOLOGY_EJECTA_1</span>
+      <span class="var-type"><i class="fa-solid fa-tag" style="margin-right:4px;"></i>Categorical · string</span>
+    </div>
+
+    <div class="data-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Ejecta morphology label</th>
+            <th>Count (approx.)</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-hi">0</td>
+            <td style="color:#c0392b;font-style:italic">NaN — not recorded</td>
+            <td class="row-hi">~283,000+</td>
+            <td style="color:#888">Dominant category</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>Rd</td>
+            <td>~27,000</td>
+            <td style="color:#888">Radial ejecta</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>SLERC</td>
+            <td>~1,100</td>
+            <td style="color:#888">Single-layer, circular</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>SLERS</td>
+            <td>~900</td>
+            <td style="color:#888">Single-layer, sinuous</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>DLERC</td>
+            <td>~700</td>
+            <td style="color:#888">Double-layer, circular</td>
+          </tr>
+          <tr>
+            <td>5+</td>
+            <td colspan="3" style="color:#aaa;font-style:italic">151 additional rare labels, each accounting for a
+              fraction of a percent…</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note"><i class="fa-solid fa-circle-info"></i> 156 unique labels total. <code>dropna=False</code> was
+      used to surface NaN as a distinct value.</p>
+
+    <!-- ══ ANALYSIS ══ -->
+    <hr class="section-rule">
+    <h2><i class="fa-solid fa-magnifying-glass" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>What the
+      Distributions Tell Us</h2>
+
+    <div class="stats-row">
+      <div class="stat-cell">
+        <div class="stat-num">384,343</div>
+        <div class="stat-desc">total craters in the dataset</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">99.95%</div>
+        <div class="stat-desc">craters smaller than 117 km across</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">84.7%</div>
+        <div class="stat-desc">depth records at or near zero</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">156</div>
+        <div class="stat-desc">unique ejecta morphology labels</div>
+      </div>
+    </div>
+
+    <h3>Diameter — complete data, extreme skew</h3>
+
+    <p>The diameter distribution is about as lopsided as a distribution can get. 384,160 craters — 99.95% of the entire
+      catalog — fall within the first bin, meaning their diameter is below roughly 117 km. The remaining bins are nearly
+      empty: 148 craters between 117 and 234 km, 24 between 234 and 350 km, and at the far end, two outliers exceeding
+      1,000 km. Those two are almost certainly recording Hellas Planitia (~2,300 km) and Argyre (~1,200 km), the two
+      largest confirmed impact basins on Mars.</p>
+
+    <p>There is no missing data here at all. Every crater has a diameter because diameter is the primary attribute used
+      to identify and catalog craters in the first place — you can't have a crater without measuring it. The shape of
+      the distribution is a classic <strong>power law</strong>: the same type seen in asteroid size populations, where
+      small bodies vastly outnumber large ones. This means the diameter variable is both complete and reliable, but its
+      extreme skewness means any regression or correlation analysis will need a log-transformation before parametric
+      statistics apply.</p>
+
+    <div class="callout note">
+      <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> For the next step</div>
+      <p>A log-transformed diameter variable will almost certainly be necessary before any regression against depth. The
+        raw distribution violates every assumption of normality.</p>
+    </div>
+
+    <h3>Depth — structural missing data encoded as zero</h3>
+
+    <p>The depth table looks, at first, like another right-skewed distribution. But there's something more significant
+      going on. That dominant first bin — 325,454 craters with a recorded depth between −0.425 and 0.117 km — contains a
+      large number of craters with depth exactly equal to <strong>zero</strong>. Not craters that are flat. Craters that
+      were never depth-measured.</p>
+
+    <p>This is a structural data problem, and it's the most important finding from the whole analysis. When depth = 0,
+      it almost certainly means the topographic data didn't exist or wasn't processed for that crater, not that the
+      crater has no bowl. Among the craters that do carry a genuine positive depth measurement, the distribution tapers
+      rapidly: 45,769 craters between 0.12 and 0.65 km, another 10,194 between 0.65 and 1.19 km, and only 8 craters
+      deeper than 3.3 km. The maximum recorded depth is ~4.95 km.</p>
+
+    <div class="callout warn">
+      <div class="callout-title"><i class="fa-solid fa-triangle-exclamation"></i> Missing data encoded as zero</div>
+      <p>Before any diameter–depth analysis, the data must be filtered to <code>DEPTH_RIMFLOOR_TOPOG &gt; 0</code>.
+        Treating zero-depth craters as measured observations would collapse the relationship we're trying to study. This
+        filter reduces the working dataset to approximately 76,800 craters — still a very rich sample.</p>
+    </div>
+
+    <h3>Ejecta morphology — a sparse, long-tailed categorical</h3>
+
+    <p>The third variable is the most visually dramatic to look at and the hardest to work with. Of the 384,343 craters
+      in the database, the majority have a blank entry for ejecta morphology. Among those that do have a label, there
+      are 156 unique strings — but most appear so rarely that they're effectively noise in any aggregate analysis. The
+      most common non-null label, "Rd" (interpreted as radial ejecta), stands well above the rest, followed by a handful
+      of more specific morphology codes that each account for a fraction of a percent of all craters.</p>
+
+    <p>The sparsity isn't random. Ejecta blankets erode. On a planet where wind, dust, and ancient volcanic resurfacing
+      have been active for billions of years, the physical structure that would let a geologist classify the ejecta type
+      simply doesn't survive for most craters. What we have is a useful variable for studying the subset of craters
+      where preservation was good — but it cannot be analyzed across the full dataset without severe selection bias.</p>
+
+    <div class="callout ok">
+      <div class="callout-title"><i class="fa-solid fa-circle-check"></i> Summary</div>
+      <p>All three variables are non-normally distributed. Diameter is complete but requires log-transformation. Depth
+        carries structural missing data that must be filtered before any analysis. Ejecta morphology is too sparse for
+        full-dataset use and should only be studied on a preserved-crater subset. These constraints will directly shape
+        every analytical decision in the weeks ahead.</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="post-footer">
+      <div class="footer-tags">
+        <a href="#" class="tag">data science</a>
+        <a href="#" class="tag">mars</a>
+        <a href="#" class="tag">frequency distribution</a>
+        <a href="#" class="tag">python</a>
+        <a href="#" class="tag">pandas</a>
+        <a href="#" class="tag">coursera</a>
+        <a href="#" class="tag">crater analysis</a>
+      </div>
+      <div class="footer-course">
+        Data Analysis and Interpretation<br>
+        Wesleyan University via Coursera<br>
+        <span style="color:#ccc">Robbins (2019) · NASA PDS</span>
+      </div>
+    </div>
+
+  </div><!-- /.page-wrap -->
+</body>
+
+</html>
