@@ -44,11 +44,19 @@ plt.close()
 
 print("Generating bivariate_scatter.png...")
 # 3. Bivariate scatterplot
-plt.figure(figsize=(8, 6))
-sns.regplot(x="DIAM_CIRCLE_IMAGE", y="DEPTH_RIMFLOOR_TOPOG", fit_reg=False, data=clean_data, scatter_kws={'alpha':0.5})
+plt.figure(figsize=(10, 8))
+sns.regplot(x="DIAM_CIRCLE_IMAGE", y="DEPTH_RIMFLOOR_TOPOG", fit_reg=True, data=clean_data, 
+            scatter_kws={'alpha':0.3, 'color': 'steelblue'}, 
+            line_kws={'color': 'darkred', 'linewidth': 2})
 plt.xlabel('Crater Diameter (km)')
 plt.ylabel('Crater Depth (km)')
-plt.title('Association Between Crater Diameter and Depth on Mars')
+plt.title('Association Between Crater Diameter and Depth on Mars', fontsize=14)
+
+textstr = "Pearson r = 0.4860\np-value < 0.001\n$R^2$ = 0.2362"
+plt.text(0.05, 0.95, textstr, transform=plt.gca().transAxes, fontsize=12,
+        verticalalignment='top', 
+        bbox=dict(boxstyle='round,pad=0.5', facecolor='white', edgecolor='gray', alpha=0.9))
+
 plt.savefig('images/bivariate_scatter.png', bbox_inches='tight', dpi=150)
 plt.close()
 

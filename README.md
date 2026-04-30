@@ -28,7 +28,7 @@
 |------------|-------|--------|-----------|
 | Week 1 | Hypothesis Testing (ANOVA) | ✅ Complete | [Part 4](https://mgpacifique.github.io/marscrater_analysis/anova.html) |
 | Week 2 | Chi-Square Test of Independence | ✅ Complete | [Part 5](https://mgpacifique.github.io/marscrater_analysis/chi_square.html) |
-| Week 3 | Pearson Correlation | 🔲 Upcoming | |
+| Week 3 | Pearson Correlation | ✅ Complete | [Part 6](https://mgpacifique.github.io/marscrater_analysis/pearson_correlation.html) |
 | Week 4 | Exploring Statistical Interactions | 🔲 Upcoming | |
 
 ---
@@ -68,6 +68,7 @@ spyder/
 ├── visualization.html             ← Part 3: Univariate & Bivariate Graphs
 ├── anova.html                     ← Part 4: ANOVA & Hypothesis Testing
 ├── chi_square.html                ← Part 5: Chi-Square Test of Independence
+├── pearson_correlation.html       ← Part 6: Pearson Correlation
 ├── mars.py                        ← Initial Python exploration script
 ├── marscrater.ipynb               ← Full analysis notebook
 ├── generate_graphs.py             ← Script for generating Matplotlib visualizations
