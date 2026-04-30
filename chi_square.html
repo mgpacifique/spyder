@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="Hypothesis testing and ANOVA results for the Robbins Mars Crater Database.">
-  <title>ANOVA & Hypothesis Testing</title>
+    content="Chi-Square Test of Independence results for the Robbins Mars Crater Database.">
+  <title>Chi-Square Test of Independence</title>
 
   <link rel="icon" href="images/download%20(7).jpg" type="image/jpeg">
   <link rel="shortcut icon" href="images/download%20(7).jpg" type="image/jpeg">
@@ -420,8 +420,7 @@
 <body>
 
   <div class="top-nav">
-    <a href="visualization.html"><i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Back to Part 3</a>
-    <a href="chi_square.html">Part 5: Chi-Square Test <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i></a>
+    <a href="anova.html"><i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Back to ANOVA</a>
   </div>
 
   <!-- ══════ HERO ══════ -->
@@ -432,9 +431,9 @@
         <i class="fa-solid fa-satellite-dish"></i>
         Data Analysis &amp; Interpretation — Week 3
       </div>
-      <h1>ANOVA & Hypothesis Testing</h1>
+      <h1>Chi-Square Test of Independence</h1>
       <div class="hero-meta">
-        <span><i class="fa-regular fa-calendar"></i> April 29, 2026</span>
+        <span><i class="fa-regular fa-calendar"></i> April 30, 2026</span>
         <span><i class="fa-regular fa-user"></i> Pacifique Manzi</span>
         <span><i class="fa-solid fa-database"></i> Robbins Mars Crater Database</span>
       </div>
@@ -457,14 +456,14 @@
 
     <!-- Lead -->
     <p class="lead">
-      Now that we have managed our variables of interest and visualized their relationships graphically, we are ready to test those relationships statistically. The first step is an Analysis of Variance (ANOVA), which assesses whether the means of a quantitative response variable are statistically different across the categories of an explanatory variable.
+      Following our analysis of variance (ANOVA) on crater depth, we turn to categorical data. We will use a Chi-Square Test of Independence to determine if there is a statistically significant association between the size of a crater and whether it produces a Radial ('Rd') ejecta blanket.
     </p>
 
-    <!-- ══ ANOVA CODE ══ -->
+    <!-- ══ CHI-SQUARE CODE ══ -->
     <hr class="section-rule">
-    <h2><i class="fa-solid fa-code" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>Running the ANOVA</h2>
+    <h2><i class="fa-solid fa-code" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>Running the Chi-Square Test</h2>
     
-    <p>To test my theories regarding Martian crater morphology, I used the quantitative variable <code>DEPTH_RIMFLOOR_TOPOG</code> (Crater Depth) and the categorical variable <code>diameter_category</code> (Crater Size Category: Small, Medium, Large, Basin). Our null hypothesis is that there is no difference in the mean depth across size categories, while the alternative hypothesis is that there is a significant difference.</p>
+    <p>We use <code>diameter_category</code> (Small, Medium, Large, Basin) as our explanatory variable and a newly created binary response variable <code>is_Rd</code>, which is 1 if the crater morphology is 'Rd' (Radial) and 0 otherwise.</p>
 
     <div class="code-wrap">
       <div class="code-bar">
@@ -474,53 +473,71 @@
         </div>
         <span class="code-lang-badge">Python</span>
       </div>
-      <pre><span class="kw">import</span> <span class="cls">statsmodels.formula.api</span> <span class="kw">as</span> <span class="var">smf</span>
-<span class="kw">import</span> <span class="cls">statsmodels.stats.multicomp</span> <span class="kw">as</span> <span class="var">multi</span>
+      <pre><span class="kw">import</span> <span class="cls">scipy.stats</span>
 
-<span class="cmt"># Subset data for ANOVA, dropping missing values</span>
-<span class="var">sub1</span> <span class="op">=</span> <span class="var">clean_data</span><span class="punc">[[</span><span class="str">'DEPTH_RIMFLOOR_TOPOG'</span><span class="punc">,</span> <span class="str">'diameter_category'</span><span class="punc">]]</span><span class="punc">.</span><span class="fn">dropna</span><span class="punc">()</span>
+<span class="cmt"># Create a contingency table (crosstab)</span>
+<span class="var">ct</span> <span class="op">=</span> <span class="var">pd</span><span class="punc">.</span><span class="fn">crosstab</span><span class="punc">(</span><span class="var">ours</span><span class="punc">[</span><span class="str">'diameter_category'</span><span class="punc">],</span> <span class="var">ours</span><span class="punc">[</span><span class="str">'is_Rd'</span><span class="punc">])</span>
 
-<span class="cmt"># Using ols function for calculating the F-statistic and associated p-value</span>
-<span class="var">model1</span> <span class="op">=</span> <span class="var">smf</span><span class="punc">.</span><span class="fn">ols</span><span class="punc">(</span>formula<span class="op">=</span><span class="str">'DEPTH_RIMFLOOR_TOPOG ~ C(diameter_category)'</span><span class="punc">,</span> data<span class="op">=</span><span class="var">sub1</span><span class="punc">)</span>
-<span class="var">results1</span> <span class="op">=</span> <span class="var">model1</span><span class="punc">.</span><span class="fn">fit</span><span class="punc">()</span>
-<span class="fn">print</span><span class="punc">(</span><span class="var">results1</span><span class="punc">.</span><span class="fn">summary</span><span class="punc">())</span></pre>
+<span class="cmt"># Run the Chi-Square test</span>
+<span class="var">chi2</span><span class="punc">,</span> <span class="var">p</span><span class="punc">,</span> <span class="var">dof</span><span class="punc">,</span> <span class="var">expected</span> <span class="op">=</span> <span class="var">scipy</span><span class="punc">.</span><span class="var">stats</span><span class="punc">.</span><span class="fn">chi2_contingency</span><span class="punc">(</span><span class="var">ct</span><span class="punc">)</span>
+<span class="fn">print</span><span class="punc">(</span><span class="str">f"Chi-Square Statistic: {chi2}"</span><span class="punc">)</span>
+<span class="fn">print</span><span class="punc">(</span><span class="str">f"p-value: {p}"</span><span class="punc">)</span></pre>
     </div>
 
     <!-- ══ OUTPUT & INTERPRETATION ══ -->
     <hr class="section-rule">
-    <h2><i class="fa-solid fa-chart-pie" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>ANOVA Results</h2>
+    <h2><i class="fa-solid fa-chart-pie" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>Chi-Square Results</h2>
 
-    <p>Running the OLS regression model on our sample of 76,804 valid craters yielded the following primary statistical results:</p>
+    <p>The overall Chi-Square test yielded a massive statistic (<code>21,259.13</code>) and a p-value of effectively <code>0.0</code> (well below the 0.05 threshold). We confidently reject the null hypothesis: there is a statistically significant association between crater size and the presence of Radial ejecta morphology.</p>
 
     <div class="data-table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Statistic</th>
-            <th>Value</th>
+            <th>Size Category</th>
+            <th>Expected 'Rd'</th>
+            <th>Observed 'Rd'</th>
+            <th>% with 'Rd' Morphology</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="row-hi">F-statistic</td>
-            <td class="row-hi">7035.0</td>
+            <td>Small</td>
+            <td>21,816</td>
+            <td class="row-hi">14,570</td>
+            <td>~4.3%</td>
           </tr>
           <tr>
-            <td class="row-hi">Prob (F-statistic)</td>
-            <td class="row-hi">0.00</td>
+            <td>Medium</td>
+            <td>2,941</td>
+            <td class="row-hi">9,661</td>
+            <td>~21.2%</td>
+          </tr>
+          <tr>
+            <td>Large</td>
+            <td>127</td>
+            <td class="row-hi">647</td>
+            <td>~32.9%</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <p>Because the <strong>Prob (F-statistic)</strong> is 0.00 (which is less than the standard 0.05 threshold), our ANOVA is statistically significant. We can confidently reject the null hypothesis and state that there is a statistically significant difference in the mean crater depth across the different size categories.</p>
-
+    <p>By comparing expected and observed frequencies, we can see that Small craters have Radial ejecta significantly less often than expected by chance. Conversely, Medium and Large craters produce Radial ejecta significantly more often than expected.</p>
 
     <!-- ══ POST HOC CODE ══ -->
     <hr class="section-rule">
-    <h2><i class="fa-solid fa-code" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>Post Hoc Comparisons</h2>
+    <h2><i class="fa-solid fa-code" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>Post Hoc Paired Comparisons</h2>
     
-    <p>Because our categorical explanatory variable has more than two levels, a significant ANOVA only tells us that <em>at least one</em> category mean is different, but it doesn't specify which ones. To find out, we must run a post hoc test using Tukey's HSD (Honestly Significant Difference).</p>
+    <p>Because the overall test only tells us that at least one group is different, we run post hoc paired comparisons to identify exactly where the differences lie. </p>
+    
+    <div class="callout" style="border-color: #ffb700; background: #fffcf5; color: #6b5000;">
+      <p><strong>A Note on the Basin Category</strong></p>
+      <br>
+      <p>In the overall contingency table, the "Basin" category only contained 14 craters with Radial ejecta (and an expected frequency of ~6.7). Chi-Square tests become unreliable when expected cell frequencies drop too low (typically below 5). To ensure statistical rigor and avoid spurious results, we restricted our post hoc analysis to only the Small, Medium, and Large categories.</p>
+    </div>
+
+    <p>Testing 3 pairs means we must apply a Bonferroni adjustment to our significance level to prevent false positives: <code>0.05 / 3 = 0.0167</code>.</p>
 
     <div class="code-wrap">
       <div class="code-bar">
@@ -530,99 +547,77 @@
         </div>
         <span class="code-lang-badge">Python</span>
       </div>
-      <pre><span class="cmt"># Run Tukey's HSD to evaluate all pairwise comparisons</span>
-<span class="var">mc1</span> <span class="op">=</span> <span class="var">multi</span><span class="punc">.</span><span class="fn">MultiComparison</span><span class="punc">(</span><span class="var">sub1</span><span class="punc">[</span><span class="str">'DEPTH_RIMFLOOR_TOPOG'</span><span class="punc">],</span> <span class="var">sub1</span><span class="punc">[</span><span class="str">'diameter_category'</span><span class="punc">])</span>
-<span class="var">res1</span> <span class="op">=</span> <span class="var">mc1</span><span class="punc">.</span><span class="fn">tukeyhsd</span><span class="punc">()</span>
-<span class="fn">print</span><span class="punc">(</span><span class="var">res1</span><span class="punc">.</span><span class="fn">summary</span><span class="punc">())</span></pre>
+      <pre><span class="kw">from</span> <span class="cls">itertools</span> <span class="kw">import</span> <span class="fn">combinations</span>
+
+<span class="cmt"># Restrict analysis to exclude the 'Basin' category due to low counts</span>
+<span class="var">valid_categories</span> <span class="op">=</span> <span class="punc">[</span><span class="str">'Small'</span><span class="punc">,</span> <span class="str">'Medium'</span><span class="punc">,</span> <span class="str">'Large'</span><span class="punc">]</span>
+<span class="var">posthoc_data</span> <span class="op">=</span> <span class="var">ours</span><span class="punc">[</span><span class="var">ours</span><span class="punc">[</span><span class="str">'diameter_category'</span><span class="punc">].</span><span class="fn">isin</span><span class="punc">(</span><span class="var">valid_categories</span><span class="punc">)].</span><span class="fn">copy</span><span class="punc">()</span>
+
+<span class="cmt"># Calculate the Bonferroni adjusted significance level</span>
+<span class="var">adjusted_alpha</span> <span class="op">=</span> <span class="num">0.05</span> <span class="op">/</span> <span class="num">3</span>
+
+<span class="cmt"># Generate all pairwise combinations of our categories</span>
+<span class="var">pairs</span> <span class="op">=</span> <span class="fn">list</span><span class="punc">(</span><span class="fn">combinations</span><span class="punc">(</span><span class="var">valid_categories</span><span class="punc">,</span> <span class="num">2</span><span class="punc">))</span>
+
+<span class="cmt"># Loop through each pair, subset the data, and run the Chi-Square test</span>
+<span class="kw">for</span> <span class="var">group1</span><span class="punc">,</span> <span class="var">group2</span> <span class="kw">in</span> <span class="var">pairs</span><span class="punc">:</span>
+    <span class="var">subset</span> <span class="op">=</span> <span class="var">posthoc_data</span><span class="punc">[(</span><span class="var">posthoc_data</span><span class="punc">[</span><span class="str">'diameter_category'</span><span class="punc">]</span> <span class="op">==</span> <span class="var">group1</span><span class="punc">)</span> <span class="op">|</span> 
+                          <span class="punc">(</span><span class="var">posthoc_data</span><span class="punc">[</span><span class="str">'diameter_category'</span><span class="punc">]</span> <span class="op">==</span> <span class="var">group2</span><span class="punc">)]</span>
+    
+    <span class="var">ct_pair</span> <span class="op">=</span> <span class="var">pd</span><span class="punc">.</span><span class="fn">crosstab</span><span class="punc">(</span><span class="var">subset</span><span class="punc">[</span><span class="str">'diameter_category'</span><span class="punc">],</span> <span class="var">subset</span><span class="punc">[</span><span class="str">'is_Rd'</span><span class="punc">])</span>
+    <span class="var">chi2</span><span class="punc">,</span> <span class="var">p</span><span class="punc">,</span> <span class="var">dof</span><span class="punc">,</span> <span class="var">expected</span> <span class="op">=</span> <span class="var">scipy</span><span class="punc">.</span><span class="var">stats</span><span class="punc">.</span><span class="fn">chi2_contingency</span><span class="punc">(</span><span class="var">ct_pair</span><span class="punc">)</span>
+    <span class="fn">print</span><span class="punc">(</span><span class="str">f"--- {group1} vs. {group2} ---"</span><span class="punc">)</span>
+    <span class="fn">print</span><span class="punc">(</span><span class="str">f"p-value: {p}"</span><span class="punc">)</span></pre>
     </div>
 
-    <h3>Tukey HSD Output</h3>
+    <h3>Post Hoc Output</h3>
     <div class="data-table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Group 1</th>
-            <th>Group 2</th>
-            <th>Mean Diff</th>
-            <th>p-adj</th>
-            <th>Lower</th>
-            <th>Upper</th>
-            <th>Reject</th>
+            <th>Comparison Pair</th>
+            <th>Chi-Square</th>
+            <th>p-value</th>
+            <th>Significant (p < 0.0167)?</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="row-hi">Basin</td>
-            <td class="row-hi">Large</td>
-            <td class="row-hi">-0.2064</td>
-            <td class="row-hi">0.0</td>
-            <td class="row-hi">-0.2932</td>
-            <td class="row-hi">-0.1196</td>
-            <td class="row-hi">True</td>
+            <td class="row-hi">Small vs. Medium</td>
+            <td class="row-hi">19352.0810</td>
+            <td class="row-hi">0.0000e+00</td>
+            <td class="row-hi">True (Reject Null)</td>
           </tr>
           <tr>
-            <td>Basin</td>
-            <td>Medium</td>
-            <td>-0.7931</td>
-            <td>0.0</td>
-            <td>-0.8779</td>
-            <td>-0.7083</td>
-            <td>True</td>
+            <td>Small vs. Large</td>
+            <td>3716.3699</td>
+            <td>0.0000e+00</td>
+            <td>True (Reject Null)</td>
           </tr>
           <tr>
-            <td>Basin</td>
-            <td>Small</td>
-            <td>-1.0458</td>
-            <td>0.0</td>
-            <td>-1.1307</td>
-            <td>-0.9610</td>
-            <td>True</td>
-          </tr>
-          <tr>
-            <td>Large</td>
-            <td>Medium</td>
-            <td>-0.5867</td>
-            <td>0.0</td>
-            <td>-0.6059</td>
-            <td>-0.5675</td>
-            <td>True</td>
-          </tr>
-          <tr>
-            <td>Large</td>
-            <td>Small</td>
-            <td>-0.8394</td>
-            <td>0.0</td>
-            <td>-0.8588</td>
-            <td>-0.8201</td>
-            <td>True</td>
-          </tr>
-          <tr>
-            <td>Medium</td>
-            <td>Small</td>
-            <td>-0.2527</td>
-            <td>0.0</td>
-            <td>-0.2588</td>
-            <td>-0.2467</td>
-            <td>True</td>
+            <td>Medium vs. Large</td>
+            <td>149.3386</td>
+            <td>2.4183e-34</td>
+            <td>True (Reject Null)</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <div class="callout">
-      <p><strong>Interpretation: Confirming the Plateau Theory</strong></p>
+      <p><strong>Geological Interpretation</strong></p>
       <br>
-      <p>The post hoc analysis shows a <code>reject = True</code> and an adjusted p-value of 0.0 for every single pairwise comparison. This means that the mean crater depth is statistically significantly different between <em>every</em> size category.</p>
+      <p>The post-hoc analysis shows a <code>reject = True</code> for every single pairwise comparison. The proportion of craters with Radial ejecta is statistically significantly different between <em>every</em> size category.</p>
       <br>
-      <p>However, when we analyze the magnitude of these differences (the <code>Mean Diff</code>), it confirms the structural theory we derived from our earlier bivariate visualizations. For instance, the difference in depth between Small and Large craters is substantial (-0.8394 km). Yet, when moving from a Large crater to a massive Basin structure, the depth only increases by -0.2064 km. This statistical evidence perfectly aligns with the geological "plateau" theory: while impacts initially excavate deeper, the maximum depth of the largest craters is inherently constrained by crustal rebound and long-term geological infilling.</p>
+      <p>The statistical analysis reveals a strong, positive association between the size of a Martian crater and the likelihood of it forming a Radial ('Rd') ejecta morphology. As craters increase in size from Small to Medium to Large, the proportion of Radial ejecta blankets increases significantly at every step. Geologically, this suggests that the energy of the impact, or the depth of the subsurface material being excavated by larger impactors, plays a crucial role in forming these distinct, sweeping radial patterns, whereas smaller, lower-energy impacts generally fail to produce them.</p>
     </div>
 
     <!-- Footer -->
     <div class="post-footer">
       <div class="footer-tags">
         <a href="#" class="tag">hypothesis testing</a>
-        <a href="#" class="tag">anova</a>
-        <a href="#" class="tag">statsmodels</a>
+        <a href="#" class="tag">chi-square</a>
+        <a href="#" class="tag">scipy</a>
         <a href="#" class="tag">coursera</a>
         <a href="#" class="tag">python</a>
       </div>
