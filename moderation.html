@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="Pearson Correlation results for the Robbins Mars Crater Database.">
-  <title>Pearson Correlation</title>
+    content="Moderation Analysis for the Robbins Mars Crater Database.">
+  <title>Statistical Moderation</title>
 
   <link rel="icon" href="images/download%20(7).jpg" type="image/jpeg">
   <link rel="shortcut icon" href="images/download%20(7).jpg" type="image/jpeg">
@@ -420,8 +420,7 @@
 <body>
 
   <div class="top-nav">
-    <a href="chi_square.html"><i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Back to Part 5</a>
-    <a href="moderation.html">Part 7: Statistical Moderation <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i></a>
+    <a href="pearson_correlation.html"><i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Back to Part 6</a>
   </div>
 
   <!-- ══════ HERO ══════ -->
@@ -430,11 +429,11 @@
     <div class="hero-content">
       <div class="hero-eyebrow">
         <i class="fa-solid fa-satellite-dish"></i>
-        Data Analysis &amp; Interpretation — Week 3
+        Data Analysis &amp; Interpretation — Week 4
       </div>
-      <h1>Pearson Correlation Coefficient</h1>
+      <h1>Exploring Statistical Interactions</h1>
       <div class="hero-meta">
-        <span><i class="fa-regular fa-calendar"></i> April 30, 2026</span>
+        <span><i class="fa-regular fa-calendar"></i> May 1, 2026</span>
         <span><i class="fa-regular fa-user"></i> Pacifique Manzi</span>
         <span><i class="fa-solid fa-database"></i> Robbins Mars Crater Database</span>
       </div>
@@ -450,21 +449,21 @@
         <div>
           <div class="byline-name">Pacifique Manzi</div>
           <div class="byline-text">Posted for <strong>Data Analysis and Interpretation</strong> — Wesleyan University
-            via Coursera &nbsp;·&nbsp; Week 3 Assignment</div>
+            via Coursera &nbsp;·&nbsp; Week 4 Assignment</div>
         </div>
       </div>
     </div>
 
     <!-- Lead -->
     <p class="lead">
-      We now shift our focus back to our two quantitative variables: crater diameter and crater depth. To assess the mathematical strength and direction of their linear relationship, we calculate the Pearson Correlation Coefficient.
+      In our previous analysis, we determined that crater diameter explains approximately 23.6% of the variance in crater depth. To understand the "lurking variables" that account for the remaining 76.4%, we will introduce a moderator: the morphology of the crater's ejecta.
     </p>
 
     <!-- ══ CODE ══ -->
     <hr class="section-rule">
-    <h2><i class="fa-solid fa-code" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>Generating the Correlation</h2>
+    <h2><i class="fa-solid fa-code" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>Testing a Potential Moderator</h2>
     
-    <p>Using the raw continuous data for diameter (<code>DIAM_CIRCLE_IMAGE</code>) and depth (<code>DEPTH_RIMFLOOR_TOPOG</code>), we can calculate the <i>r</i> value and the coefficient of determination (<i>R-squared</i>) using Python's SciPy library.</p>
+    <p>A moderator is a third variable that affects the strength or direction of the relationship between two primary variables. By splitting our data into subgroups based on the <code>morphology_group</code> categorical variable, we can calculate the Pearson Correlation Coefficient for each subgroup and see if the association changes significantly depending on the ejecta type.</p>
 
     <div class="code-wrap">
       <div class="code-bar">
@@ -476,73 +475,88 @@
       </div>
       <pre><span class="kw">import</span> <span class="cls">scipy.stats</span>
 
-<span class="cmt"># Subset the data to our two quantitative variables and drop missing rows</span>
-<span class="var">sub_corr</span> <span class="op">=</span> <span class="var">clean_data</span><span class="punc">[[</span><span class="str">'DIAM_CIRCLE_IMAGE'</span><span class="punc">,</span> <span class="str">'DEPTH_RIMFLOOR_TOPOG'</span><span class="punc">]].</span><span class="fn">dropna</span><span class="punc">()</span>
+<span class="cmt"># Calculate correlation moderated by Morphology Group</span>
+<span class="var">groups</span> <span class="op">=</span> <span class="var">clean_data</span><span class="punc">[</span><span class="str">'morphology_group'</span><span class="punc">].</span><span class="fn">unique</span><span class="punc">()</span>
 
-<span class="cmt"># Run the Pearson Correlation test</span>
-<span class="var">corr</span><span class="punc">,</span> <span class="var">p_value</span> <span class="op">=</span> <span class="var">scipy</span><span class="punc">.</span><span class="var">stats</span><span class="punc">.</span><span class="fn">pearsonr</span><span class="punc">(</span><span class="var">sub_corr</span><span class="punc">[</span><span class="str">'DIAM_CIRCLE_IMAGE'</span><span class="punc">],</span> <span class="var">sub_corr</span><span class="punc">[</span><span class="str">'DEPTH_RIMFLOOR_TOPOG'</span><span class="punc">])</span>
+<span class="fn">print</span><span class="punc">(</span><span class="str">"Correlation between Diameter and Depth moderated by Morphology Group:\n"</span><span class="punc">)</span>
 
-<span class="cmt"># Calculate R-squared</span>
-<span class="var">r_squared</span> <span class="op">=</span> <span class="var">corr</span><span class="op">**</span><span class="num">2</span>
-
-<span class="fn">print</span><span class="punc">(</span><span class="str">"=== Pearson Correlation Results ==="</span><span class="punc">)</span>
-<span class="fn">print</span><span class="punc">(</span><span class="str">f"Pearson Correlation Coefficient (r): {corr:.4f}"</span><span class="punc">)</span>
-<span class="fn">print</span><span class="punc">(</span><span class="str">f"p-value: {p_value:.4e}"</span><span class="punc">)</span>
-<span class="fn">print</span><span class="punc">(</span><span class="str">f"R-squared: {r_squared:.4f}"</span><span class="punc">)</span></pre>
+<span class="kw">for</span> <span class="var">group</span> <span class="kw">in</span> <span class="var">groups</span><span class="punc">:</span>
+    <span class="var">sub_data</span> <span class="op">=</span> <span class="var">clean_data</span><span class="punc">[</span><span class="var">clean_data</span><span class="punc">[</span><span class="str">'morphology_group'</span><span class="punc">]</span> <span class="op">==</span> <span class="var">group</span><span class="punc">]</span>
+    <span class="kw">if</span> <span class="fn">len</span><span class="punc">(</span><span class="var">sub_data</span><span class="punc">)</span> <span class="op">></span> <span class="num">2</span><span class="punc">:</span> 
+        <span class="var">corr</span><span class="punc">,</span> <span class="var">p</span> <span class="op">=</span> <span class="var">scipy</span><span class="punc">.</span><span class="var">stats</span><span class="punc">.</span><span class="fn">pearsonr</span><span class="punc">(</span><span class="var">sub_data</span><span class="punc">[</span><span class="str">'DIAM_CIRCLE_IMAGE'</span><span class="punc">],</span> <span class="var">sub_data</span><span class="punc">[</span><span class="str">'DEPTH_RIMFLOOR_TOPOG'</span><span class="punc">])</span>
+        <span class="var">r_sq</span> <span class="op">=</span> <span class="var">corr</span><span class="op">**</span><span class="num">2</span>
+        <span class="fn">print</span><span class="punc">(</span><span class="str">f"Group: {group} (n={len(sub_data)})"</span><span class="punc">)</span>
+        <span class="fn">print</span><span class="punc">(</span><span class="str">f"r = {corr:.4f}, r^2 = {r_sq:.4f}"</span><span class="punc">)</span>
+        <span class="fn">print</span><span class="punc">(</span><span class="str">"-"</span> <span class="op">*</span> <span class="num">30</span><span class="punc">)</span></pre>
     </div>
 
     <!-- ══ OUTPUT & INTERPRETATION ══ -->
     <hr class="section-rule">
     <h2><i class="fa-solid fa-chart-pie" style="font-size:0.7em;margin-right:12px;opacity:0.4;"></i>Results &amp; Interpretation</h2>
 
-    <p>Running the correlation test yielded the following output:</p>
+    <p>Running the correlation test across the different morphology groups yielded the following output:</p>
 
     <div class="data-table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Statistic</th>
-            <th>Value</th>
+            <th>Morphology Group</th>
+            <th>Sample Size (n)</th>
+            <th>Pearson r</th>
+            <th>R-squared</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Pearson Correlation Coefficient (r)</td>
-            <td class="row-hi">0.4860</td>
+            <td>Multi Layer</td>
+            <td>581</td>
+            <td class="row-hi">0.7939</td>
+            <td class="row-hi">0.6302</td>
           </tr>
           <tr>
-            <td>p-value</td>
-            <td class="row-hi">0.0000e+00</td>
+            <td>Double Layer</td>
+            <td>2,612</td>
+            <td class="row-hi">0.7738</td>
+            <td class="row-hi">0.5987</td>
           </tr>
           <tr>
-            <td>R-squared</td>
-            <td class="row-hi">0.2362</td>
+            <td>Radial</td>
+            <td>22,695</td>
+            <td class="row-hi">0.6932</td>
+            <td class="row-hi">0.4806</td>
+          </tr>
+          <tr>
+            <td>Single Layer</td>
+            <td>12,745</td>
+            <td class="row-hi">0.5629</td>
+            <td class="row-hi">0.3168</td>
+          </tr>
+          <tr>
+            <td>Other</td>
+            <td>38,171</td>
+            <td class="row-hi">0.5325</td>
+            <td class="row-hi">0.2836</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <div style="margin: 40px 0; border: 1px solid #e0e0e0; border-radius: 6px; padding: 20px; text-align: center; background: #fafafa;">
-      <img src="images/bivariate_scatter.png" alt="Scatterplot of Crater Diameter vs Depth with Regression Line" style="max-width: 100%; height: auto; border-radius: 4px;">
-      <p style="font-size: 0.85rem; color: #666; margin-top: 15px; font-style: italic; margin-bottom: 0;">
-        Scatterplot visualizing the linear relationship between crater diameter and depth, including the line of best fit and Pearson correlation statistics.
-      </p>
-    </div>
-
     <div class="callout">
       <p><strong>Geological Interpretation</strong></p>
       <br>
-      <p>A Pearson correlation coefficient was calculated to assess the linear relationship between impact crater diameter (<code>DIAM_CIRCLE_IMAGE</code>) and crater depth (<code>DEPTH_RIMFLOOR_TOPOG</code>). The results reveal a highly significant, moderate positive correlation between the two variables (<em>r = 0.486, p < 0.001</em>). This indicates that as the size of a crater increases, its depth also tends to increase.</p>
+      <p>To determine if the relationship between crater diameter and depth is consistent across different types of impacts, a moderator analysis was conducted using the categorical variable <code>morphology_group</code> (ejecta pattern). For the entire sample, crater diameter explains approximately 23.6% (r² = 0.2362) of the variance in crater depth.</p>
       <br>
-      <p>Furthermore, the coefficient of determination (R-squared) is 0.2362. This means that approximately 23.6% of the variability in crater depth is explained by the variance in crater diameter. This result strongly supports our earlier hypothesis: while the energy of the impact (diameter) is a significant predictor of how deep a crater will be, a large majority of the variance (~76.4%) is attributable to other factors, such as billions of years of aeolian deposition, volcanic resurfacing, and the physical limits of complex crater formation.</p>
+      <p>However, when examining the subgroups, we found that morphology significantly moderates this association. The correlation is exceptionally strong for craters with "Multi Layer" (r = 0.79, r² = 0.63) and "Double Layer" (r = 0.77, r² = 0.60) ejecta patterns, meaning diameter directly explains over 60% of the variance in depth for these impacts. In contrast, for "Single Layer" craters, the relationship is much weaker (r = 0.56, r² = 0.31).</p>
+      <br>
+      <p>This indicates that environmental factors and geological complexity heavily dictate how a crater's width impacts its ultimate depth. The "lurking variable" accounting for much of the unexplained variance in our original correlation was indeed the morphological type of the impact.</p>
     </div>
 
     <!-- Footer -->
     <div class="post-footer">
       <div class="footer-tags">
+        <a href="#" class="tag">moderator</a>
         <a href="#" class="tag">pearson correlation</a>
         <a href="#" class="tag">r-squared</a>
-        <a href="#" class="tag">scipy</a>
         <a href="#" class="tag">coursera</a>
         <a href="#" class="tag">python</a>
       </div>
