@@ -551,6 +551,12 @@
       <p>This indicates that environmental factors and geological complexity heavily dictate how a crater's width impacts its ultimate depth. The "lurking variable" accounting for much of the unexplained variance in our original correlation was indeed the morphological type of the impact.</p>
     </div>
 
+    <div class="callout" style="border-color: #8a2be2; background: #faf5ff; color: #4b0082;">
+      <p><strong>A Note on Post Hoc Testing for Peer Review</strong></p>
+      <br>
+      <p>Unlike an ANOVA or Chi-Square test, which produce a single "omnibus" p-value that requires post hoc testing (like Tukey's HSD or Bonferroni adjustments) to determine which specific groups differ, testing a categorical moderator with a Pearson Correlation is handled differently. By stratifying the data by the <code>morphology_group</code> moderator and calculating the correlation coefficient separately for each subgroup, the specific relationships have already been isolated. Therefore, no additional post hoc testing is required for this analysis.</p>
+    </div>
+
     <!-- Footer -->
     <div class="post-footer">
       <div class="footer-tags">
